@@ -10,6 +10,10 @@ module.exports = function fetchEntries (initialEndpoint, destinationFile) {
         return response.json();
       })
       .then(function (json) {
+        if (recordFields == null) {
+          recordFields = json.result.fields;
+        }
+
         if (json.result.records.length) {
           fetchedEntries = fetchedEntries.concat(json.result.records);
           console.log(`Fetched ${fetchedEntries.length} entries so far.`);
@@ -18,7 +22,10 @@ module.exports = function fetchEntries (initialEndpoint, destinationFile) {
             fetchSingleEntryPage(json.result._links.next, callback);
           }
         } else {
-          callback(fetchedEntries);
+          callback({
+            fields: recordFields,
+            entries: fetchedEntries
+          });
         }
       })
       .catch(function (error) {
@@ -33,6 +40,7 @@ module.exports = function fetchEntries (initialEndpoint, destinationFile) {
   }
 
   let fetchedEntries = [];
+  let recordFields = null;
 
   fetchSingleEntryPage(initialEndpoint, writeToFile(destinationFile));
 };
