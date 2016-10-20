@@ -35,7 +35,7 @@ module.exports = function fetchEntries (initialEndpoint, destinationFile) {
 
   function writeToFile (filename) {
     return function (entries) {
-      fs.writeFileSync(filename, JSON.stringify(entries, null, 1));
+      fs.writeFileSync(__dirname + `../filename`, JSON.stringify(entries, null, 1));
     };
   }
 
