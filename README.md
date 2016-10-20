@@ -5,7 +5,7 @@
 * Daniel de Jesus
 * Rafael Nunes
 
-⋅⋅⋅{cscbb, djo, rngs} at cin.ufpe.br
+⋅⋅⋅ {cscbb, djo, rngs} at cin.ufpe.br
 
 **Description:** The project will bring an approach with different data visualization techniques to analyze the dataset of students performance in municipal schools of Recife, data available at: http://dados.recife.pe.gov.br/organization/secretaria-de-educacao.
 
