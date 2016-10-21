@@ -1,10 +1,10 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 
-module.exports = function fetchEntries (initialEndpoint, destinationFile) {
+module.exports = function fetchOpenDataEntries (initialEndpoint, callback) {
   const baseURL = 'http://dados.recife.pe.gov.br';
 
-  function fetchSingleEntryPage (endpoint, callback) {
+  function fetchSingleEntryPage (endpoint) {
     fetch(`${baseURL}${endpoint}`)
       .then(function (response) {
         return response.json();
@@ -33,14 +33,8 @@ module.exports = function fetchEntries (initialEndpoint, destinationFile) {
       })
   }
 
-  function writeToFile (filename) {
-    return function (entries) {
-      fs.writeFileSync(__dirname + `../filename`, JSON.stringify(entries, null, 1));
-    };
-  }
-
   let fetchedEntries = [];
   let recordFields = null;
 
-  fetchSingleEntryPage(initialEndpoint, writeToFile(destinationFile));
+  fetchSingleEntryPage(initialEndpoint, callback);
 };
