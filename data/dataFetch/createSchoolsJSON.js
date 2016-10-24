@@ -3,9 +3,9 @@ var path = require('path');
 
 var fetchOpenDataEntries = require('./fetchOpenDataEntries');
 
-module.exports = function (endpoint, filename, callback) {
+module.exports = function (endpoint, filePath, callback) {
   function writeToFile (entries) {
-    fs.writeFileSync(path.join(__dirname, `../${filename}`), JSON.stringify(entries, null, 1));
+    fs.writeFileSync(filePath, JSON.stringify(entries, null, 1));
 
     if (callback) {
       callback();

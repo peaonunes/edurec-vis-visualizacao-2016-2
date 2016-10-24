@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const fs = require('fs');
 
 module.exports = function fetchOpenDataEntries (initialEndpoint, callback) {
   const baseURL = 'http://dados.recife.pe.gov.br';
@@ -16,7 +15,6 @@ module.exports = function fetchOpenDataEntries (initialEndpoint, callback) {
 
         if (json.result.records.length) {
           fetchedEntries = fetchedEntries.concat(json.result.records);
-          console.log(`Fetched ${fetchedEntries.length} entries so far.`);
 
           if (json.result._links && json.result._links.next) {
             fetchSingleEntryPage(json.result._links.next, callback);
@@ -30,7 +28,7 @@ module.exports = function fetchOpenDataEntries (initialEndpoint, callback) {
       })
       .catch(function (error) {
         console.log(error);
-      })
+      });
   }
 
   let fetchedEntries = [];
