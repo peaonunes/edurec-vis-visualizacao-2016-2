@@ -13,9 +13,11 @@ module.exports = function fetchCoordinatesFromAddressList (addressList, callback
     }
 
     asyncIterationFunction(array[index], function (error) {
-      if (!error) {
-        asyncForEach(array, asyncIterationFunction, index + 1);
+      if (error) {
+        throw error;
       }
+
+      asyncForEach(array, asyncIterationFunction, index + 1);
     });
   }
 
@@ -33,5 +35,5 @@ module.exports = function fetchCoordinatesFromAddressList (addressList, callback
       callback(error);
     });
   });
-}
+};
 

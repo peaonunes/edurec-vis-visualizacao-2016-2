@@ -47,7 +47,9 @@ function fetchSchoolsData () {
         });
 
         fetchAddressCoordinates(schoolAddresses, function (coordinates) {
-          schoolData.forEach((school, index) => {
+          console.log(`Finished fetching addresses for ${coordinates.length} schools`);
+
+          schoolData.entries.forEach((school, index) => {
             school.endereco = coordinates[index];
           });
 
@@ -62,5 +64,5 @@ function fetchSchoolsData () {
   });
 }
 
-fetchStudentsData();
+// fetchStudentsData();
 fetchSchoolsData();
