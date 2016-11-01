@@ -1,7 +1,12 @@
 const fs = require('fs');
 
-const aggregateAndFilter = require('./postProcessing/aggregateAndFilterSchoolData');
+const aggregateAndFilterSchoolData = require('./postProcessing/aggregateAndFilterSchoolData');
+const aggregateAndFilterStudentData = require('./postProcessing/aggregateAndFilterStudentsData');
 
-const schoolsData = JSON.parse(fs.readFileSync('dataFiles/escolas2015.json'));
+let schoolsData = JSON.parse(fs.readFileSync('dataFiles/escolas2015.json'));
+let studentsData = JSON.parse(fs.readFileSync('dataFiles/estudantes2015.json'));
 
-console.log(aggregateAndFilter(schoolsData.entries));
+
+studentsData.entries = aggregateAndFilterStudentData(studentsData.entries, schoolsData.entries);
+
+fs.writeFileSync('dataFiles/estudantes2015.json', JSON.stringify(studentsData, null, 1));
