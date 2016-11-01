@@ -2,7 +2,7 @@ var path = require('path');
 var fs = require('fs');
 
 module.exports = function aggregateAndFilterSchoolData (rawSchoolsData) {
-  return rawSchoolsData.map((schoolData) => {
+  return rawSchoolsData.reduce((aggregate, schoolData) => {
     const aggregatedData = {
       agua: aggregateWaterSourceData(schoolData),
       energia: aggregateEnergySourceData(schoolData),
@@ -13,8 +13,10 @@ module.exports = function aggregateAndFilterSchoolData (rawSchoolsData) {
 
     const filteredData = getOnlyDesiredKeys(schoolData);
 
-    return Object.assign({}, aggregatedData, filteredData);
-  });
+    aggregate[schoolData['_id']] = Object.assign({}, aggregatedData, filteredData);
+
+    return aggregate;
+  }, {});
 };
 
 const waterSourceValues = [ 'inexistente', 'rede_publica', 'poco_artesiano', 'cacimba', 'fonte' ];
@@ -54,21 +56,24 @@ function aggregateCategoricalData(categories, prefix = null) {
     return categories.reduce(function (aggregatedData, category) {
       const valueForCategory = parseInt(schoolData[`${baseString}${category}`]);
 
-      aggregatedData[category] = !isNaN(valueForCategory) && valueForCategory;
+      aggregatedData[category] = !!(!isNaN(valueForCategory) && valueForCategory);
 
       return aggregatedData;
     }, {});
   }
 }
 
-function getOnlyDesiredKeys(rawSchoolData) {
+const getOnlyDesiredKeys = (() => {
   var desiredKeysFile = path.join(__dirname, '../dataFiles/schoolFields.json');
   var desiredKeys = JSON.parse(fs.readFileSync(desiredKeysFile));
-  var result = {};
 
-  desiredKeys.forEach((key) => {
-    result[key] = rawSchoolData[key];
-  });
+  return (rawSchoolData) => {
+    var result = {};
 
-  return result;
-}
+    desiredKeys.forEach((key) => {
+      result[key] = rawSchoolData[key];
+    });
+
+    return result;
+  }
+})();
