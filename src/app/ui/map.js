@@ -6,6 +6,7 @@ export var map;
 export function renderMap() {
     setupMap();
 
+    // TODO: Get schools data from state.
     var schools = [
         {
             "nome": "ESCOLA MUNICIPAL IRMA TEREZINHA BATISTA - ANEXO I",
@@ -24,10 +25,10 @@ export function renderMap() {
         }
     ];
 
-    renderPoints(schools);
+    renderMarkers(schools);
 }
 
-export function setupMap(){
+function setupMap(){
     var content = d3.select("#content");
 
     content.append("div")
@@ -45,10 +46,21 @@ export function setupMap(){
     }).addTo(map);
 }
 
-export function renderPoints(schools) {
+function renderMarkers(schools) {
     for (var index in schools){
         var school = schools[index];
-        leaflet.marker([school["lat"], school["lng"]]).addTo(map)
-            .bindPopup("<b>"+school["nome"]+"</b><br/>").openPopup();
+        var marker = leaflet.marker([school["lat"], school["lng"]]).addTo(map)
+            .bindPopup(moreDetails(school)).openPopup();
+
+        marker.on("mouseover", function (e) {
+            this.openPopup();
+        });
+        marker.on("mouseout", function (e) {
+            this.closePopup();
+        });
     }
+}
+
+function moreDetails(school){
+    return "<b>"+school["nome"]+"</b><br/>";
 }
