@@ -6,9 +6,149 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <style>
+  ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+  }
+
+  li {
+      float: left;
+  }
+
+  li a, .dropbtn {
+      display: inline-block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+  }
+
+  li a:hover, .dropdown:hover .dropbtn {
+      background-color: red;
+  }
+
+  li.dropdown {
+      display: inline-block;
+  }
+
+  .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  }
+
+  .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+  }
+
+  .dropdown-content a:hover {background-color: #f1f1f1}
+
+  .show {display:block;}
+
+  </style>
 </head>
 <body>
-<div id="content"></div>
-<script src="bundle.js"></script>
+  <div id="content">
+    <div id="mapView">
+      <div id="filterBar">
+        <ul>
+          <li class="dropdown">
+            <a class="dropbtn" onclick="openDropdown(dropdownDependencias)">Dependências</a>
+            <div class="dropdown-content" id="dropdownDependencias">
+              <input type="checkbox" value="Biblioteca" class="filter-checkbox dependencia" onchange="filterChanged(this)">Biblioteca</input>
+              <br/>
+              <input type="checkbox" value="Cozinha" class="filter-checkbox dependencia" onchange="filterChanged(this)">Cozinha</input>
+              <br/>
+              <input type="checkbox" value="Refeitório" class="filter-checkbox dependencia" onchange="filterChanged(this)">Refeitório</input>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a class="dropbtn" onclick="openDropdown(dropdownServicos)">Serviços básicos</a>
+            <div class="dropdown-content" id="dropdownServicos">
+              <input type="checkbox" value="Água" class="filter-checkbox servico" onchange="filterChanged(this)">Água</input>
+              <br/>
+              <input type="checkbox" value="Energia" class="filter-checkbox servico" onchange="filterChanged(this)" onchange="filterChanged(this)">Energia</input>
+              <br/>
+              <input type="checkbox" value="Esgoto" class="filter-checkbox servico" onchange="filterChanged(this)">Esgoto</input>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a class="dropbtn" onclick="openDropdown(dropdownGrau)">Ciclos de ensino</a>
+            <div class="dropdown-content" id="dropdownGrau">
+              <input type="checkbox" value="Infantil" class="filter-checkbox grau" onchange="filterChanged(this)" checked>Infantil</input>
+              <br/>
+              <input type="checkbox" value="Fundamental" class="filter-checkbox grau" onchange="filterChanged(this)" checked checked>Fundamental</input>
+              <br/>
+              <input type="checkbox" value="Médio" class="filter-checkbox grau" onchange="filterChanged(this)" checked>Médio</input>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a class="dropbtn" onclick="openDropdown(dropdownTurno)">Turno</a>
+            <div class="dropdown-content" id="dropdownTurno">
+              <input type="checkbox" value="Manhã" class="filter-checkbox turno" onchange="filterChanged(this)" checked>Manhã</input>
+              <br/>
+              <input type="checkbox" value="Tarde" class="filter-checkbox turno" onchange="filterChanged(this)" checked>Tarde</input>
+              <br/>
+              <input type="checkbox" value="Noite" class="filter-checkbox turno" onchange="filterChanged(this)" checked>Noite</input>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div id="map">
+      </div>
+    </div>
+  </div>
+  <script src="bundle.js"></script>
+  <script>
+    var filtroEscolas = {"dependencia": {"Biblioteca": false, "Cozinha": false, "Refeitório": false},
+                  "servico": {"Água": false, "Energia": false, "Esgoto": false},
+                  };
+    var filtroAlunos = {"grau": {"Infantil": true, "Fundamental": true, "Médio": true},
+                        "turno": {"Manhã": true, "Tarde": true, "Noite": true}};
+
+    var openDropdown = function(e) {
+      var elementClassList = document.getElementById(e.id).classList;
+      closeDropdowns();
+      if(!elementClassList.contains('show'))
+        elementClassList.toggle("show");
+    }
+
+    window.onclick = function(e) {
+      if(!e.target.matches('.dropbtn') && !e.target.matches('.filter-checkbox')) {
+        closeDropdowns();
+      }
+    }
+
+    var filterChanged = function(e) {
+      if(e.classList.contains('dependencia'))
+        filtroEscolas['dependencia'][e.value] = e.checked;
+      if(e.classList.contains('servico'))
+        filtroEscolas['servico'][e.value] = e.checked;
+      if(e.classList.contains('grau'))
+        filtroAlunos['grau'][e.value] = e.checked;
+      if(e.classList.contains('turno'))
+        filtroAlunos['turno'][e.value] = e.checked;
+    }
+
+    closeDropdowns = function() {
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+      for (var d = 0; d < dropdowns.length; d++) {
+        var openDropdown = dropdowns[d];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  </script>
 </body>
 </html>
