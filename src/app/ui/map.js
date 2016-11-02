@@ -1,6 +1,9 @@
-var map;
+const leaflet = require('leaflet');
+const d3 = require('d3');
 
-function renderMap() {
+export var map;
+
+export function renderMap() {
     setupMap();
 
     var schools = [
@@ -24,7 +27,7 @@ function renderMap() {
     renderPoints(schools);
 }
 
-function setupMap(){
+export function setupMap(){
     var content = d3.select("#content");
 
     content.append("div")
@@ -42,7 +45,7 @@ function setupMap(){
     }).addTo(map);
 }
 
-function renderPoints(schools) {
+export function renderPoints(schools) {
     for (var index in schools){
         var school = schools[index];
         leaflet.marker([school["lat"], school["lng"]]).addTo(map)

@@ -1,5 +1,5 @@
 const d3 = require('d3');
-const leaflet = require('leaflet');
+import { renderMap } from './ui/map.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     d3.select('#content')
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderMap();
 });
-
+/*
 var map;
 
 function renderMap() {
@@ -59,4 +59,4 @@ function renderPoints(schools) {
         leaflet.marker([school["lat"], school["lng"]]).addTo(map)
             .bindPopup("<b>"+school["nome"]+"</b><br/>").openPopup();
     }
-}
+}*/
