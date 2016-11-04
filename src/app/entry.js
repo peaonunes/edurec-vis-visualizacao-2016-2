@@ -5,12 +5,15 @@ import { actionCreators as schoolFilterActions } from './state/actions/schoolFil
 
 import Immutable, {List} from 'immutable';
 const d3 = require('d3');
+import { renderMap } from './ui/map.js';
 
 const store = storeFactory();
 
 const appContent = d3.select('#content');
 
 document.addEventListener('DOMContentLoaded', () => {
+    renderMap();
+
   let filterA = false;
   let filterB = false;
 

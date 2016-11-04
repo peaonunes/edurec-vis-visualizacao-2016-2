@@ -33,5 +33,6 @@
     "redux": "^3.6.0",
     "reselect": "^2.5.4",
     "source-map-loader": "^0.1.5"
+    "leaflet":"^1.0.1"
   }
 }
