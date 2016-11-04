@@ -4,7 +4,7 @@
   "description": "**Team:** * Camila Brendel * Daniel de Jesus * Rafael Nunes",
   "main": "index.js",
   "scripts": {
-    "serve": "webpack-dev-server --content-base docs/",
+    "serve": "webpack-dev-server --host=0.0.0.0 --content-base docs/",
     "build": "webpack --optimize-minimize --optimize-occurrence-order"
   },
   "repository": {
