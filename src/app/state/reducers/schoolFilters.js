@@ -4,10 +4,14 @@ import { Set } from 'immutable';
 
 export default function schoolFiltersReducer(filters = Set(), action) {
   switch (action.type) {
-    case actionTypes.ADD_SCHOOL_FILTER:
-      return filters.add(action.payload.fieldName);
-    case actionTypes.REMOVE_SCHOOL_FILTER:
-      return filters.remove(action.payload.fieldName);
+    case actionTypes.TOGGLE_SCHOOL_FILTER:
+      const {fieldName} = action.payload;
+
+      if (filters.contains(fieldName)) {
+        return filters.remove(fieldName);
+      } else {
+        return filters.add(fieldName);
+      }
     default:
       return filters;
   }

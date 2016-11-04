@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { List } from 'immutable';
 
 const schools = (state) => state.schools;
 const schoolFilters = (state) => state.schoolFilters;
@@ -23,7 +24,7 @@ const schoolStudentsSelector = createSelector(
     return (schoolId) => {
       return filteredSchools
         .get(schoolId)
-        .get('students')
+        .get('students', List())
         .filter((student) => {
           return studentFilters
             .reduce((aggregateValue, allowedValues, field) => {

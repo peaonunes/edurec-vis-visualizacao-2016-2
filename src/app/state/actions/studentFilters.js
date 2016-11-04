@@ -21,5 +21,5 @@ export const actionCreators = {
         fieldName: fieldName
       }
     };
-  }
+  },
 };

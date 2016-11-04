@@ -2,6 +2,7 @@ import storeFactory from './state/storeFactory';
 import stateSetup from './stateUsageExample';
 import selectors from './state/selectors';
 import { actionCreators as schoolFilterActions } from './state/actions/schoolFilters';
+import { actionCreators as studentFilterActions } from './state/actions/studentFilters';
 
 import Immutable, {List} from 'immutable';
 const d3 = require('d3');
@@ -12,11 +13,12 @@ const store = storeFactory();
 const appContent = d3.select('#content');
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderMap();
+  // renderMap();
 
-  let filterA = false;
-  let filterB = false;
+  renderReduxExample();
+});
 
+function renderReduxExample() {
   appContent
     .append('h1')
     .text('exemplo de uso do redux');
@@ -24,48 +26,69 @@ document.addEventListener('DOMContentLoaded', () => {
   appContent
     .append('button')
     .text('Apply filter A')
-    .on('click', function() {
-      filterA = !filterA;
-      let action;
-      const $this = d3.select(this);
-
-      if (filterA) {
-        action = schoolFilterActions.addSchoolFilter('fieldA');
-        $this.text('Remove filter A');
-      } else {
-        action = schoolFilterActions.removeSchoolFilter('fieldA');
-        $this.text('Apply filter A');
-      }
-
-      store.dispatch(action);
-    });
+    .on('click', filterToggleHandler('fieldA'));
 
   appContent
     .append('button')
     .text('Apply filter B')
-    .on('click', function() {
-      filterB = !filterB;
-      let action;
+    .on('click', filterToggleHandler('fieldB'));
+
+  function filterToggleHandler(fieldName) {
+    return function() {
+      const hasFilter = store.getState().schoolFilters.contains(fieldName);
       const $this = d3.select(this);
 
-      if (filterB) {
-        action = schoolFilterActions.addSchoolFilter('fieldB');
-        $this.text('Remove filter B');
-      } else {
-        action = schoolFilterActions.removeSchoolFilter('fieldB');
+      if (hasFilter) {
         $this.text('Apply filter B');
+      } else {
+        $this.text('Remove filter B');
       }
 
-      store.dispatch(action);
-    });
+      store.dispatch(schoolFilterActions.toggleSchoolFilter(fieldName));
+    }
+  }
 
   appContent
-    .
+    .append('p')
+    .text('Student filters');
+
+  addStudentFilterCheckboxForFoo('bar');
+  addStudentFilterCheckboxForFoo('baz');
+  addStudentFilterCheckboxForFoo('qux');
+
+  function addStudentFilterCheckboxForFoo(value) {
+    appContent
+      .append('br');
+
+    const checkboxId = `foo-${value}`;
+
+    appContent
+      .append('input')
+      .attr('class', 'studentFilter')
+      .attr('type', 'checkbox')
+      .attr('id', checkboxId)
+      .attr('value', value)
+      .attr('checked', true)
+      .on('change', applyStudentFilters);
+
+    appContent
+      .append('label')
+      .text(value)
+      .attr('for', checkboxId);
+  }
+
+  function applyStudentFilters() {
+    var nodes = appContent
+      .selectAll('input.studentFilter')
+      .nodes();
+
+    store.dispatch(studentFilterActions.addStudentFilter('foo', nodes.filter((node) => node.checked).map((node) => node.value)));
+  }
 
   store.subscribe(renderSchools);
 
   stateSetup(store);
-});
+}
 
 const renderSchools = (function() {
   let schoolsMap = null;
@@ -87,29 +110,27 @@ const renderSchools = (function() {
     const state = store.getState();
     let filteredSchools = selectors.schools(state);
 
-    if (!Immutable.is(filteredSchools, schoolsMap)) {
-      schoolsMap = filteredSchools;
-      // Converto para array pra facilitar meu trabalho depois, schoolsMap é um Immutable.Map
-      schoolsList = schoolsMap.toArray();
+    schoolsMap = filteredSchools;
+    // Converto para array pra facilitar meu trabalho depois, schoolsMap é um Immutable.Map
+    schoolsList = schoolsMap.toArray();
 
-      let schoolDescriptions = appContent
-        .selectAll('div.school')
-        .data(schoolsList);
+    let schoolDescriptions = appContent
+      .selectAll('div.school')
+      .data(schoolsList);
 
-      schoolDescriptions
-        .exit()
-        .remove();
+    schoolDescriptions
+      .exit()
+      .remove();
 
-      schoolDescriptions = schoolDescriptions
-        .enter()
-        .append('div')
-        .attr('class', 'school')
-        .merge(schoolDescriptions);
+    schoolDescriptions = schoolDescriptions
+      .enter()
+      .append('div')
+      .attr('class', 'school')
+      .merge(schoolDescriptions);
 
-      setTitle(schoolDescriptions);
+    setTitle(schoolDescriptions);
 
-      renderStudents(schoolDescriptions);
-    }
+    renderStudents(schoolDescriptions);
   }
 })();
 
@@ -119,6 +140,8 @@ const renderStudents = (function() {
   return function(schoolDescriptions) {
     const state = store.getState();
     let currentStudentsSelector = selectors.schoolStudents(state);
+
+    console.log('??');
 
     if (!Immutable.is(studentsSelector, currentStudentsSelector)) {
       studentsSelector = currentStudentsSelector;
@@ -135,8 +158,13 @@ const renderStudents = (function() {
       let studentListItems = studentsList
         .selectAll('li')
         .data(school => {
-          return school.get('students', List()).toArray();
+          console.log(school);
+          return studentsSelector(school.get('_id')).toArray();
         });
+
+      studentListItems
+        .exit()
+        .remove();
 
       studentListItems = studentListItems
         .enter()
