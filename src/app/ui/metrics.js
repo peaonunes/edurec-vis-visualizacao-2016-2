@@ -20,7 +20,25 @@ var schools = [
             "SITU": "MO"
           }
         ]
-   }
+   },
+   {
+       "nome": "ESCOLA MUNICIPAL IRMA TEREZINHA BATISTA - ANEXO I",
+       "rank": 80,
+       "address": "R. dos Craveiros, 273 - Campina do Barreto, Recife - PE, 52121-370, Brazil",
+       "email": "EM.TEREZINHABATISTA@EDUCARECIFE.COM.BR",
+       "lat": -8.014138299999999,
+       "lng": -34.8813573,
+       "alunos": [
+         {
+           "nome": "camila",
+           "SITU": "AP"
+         },
+         {
+           "nome": "peao",
+           "SITU": "AP"
+         }
+       ]
+  }
 ];
 
 export function calculateSchoolGrade() {
@@ -34,9 +52,9 @@ export function calculateSchoolGrade() {
       if(student.SITU == student_situations.AP)
         ap++;
       if(student_situations.hasOwnProperty(student.SITU))
-        total ++;
+        total++;
     }
-    schools["grade"] = (ap / total) * 100;
+    schools[i]["grade"] = (ap / total) * 100;
   }
   return schools;
 }
