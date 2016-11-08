@@ -12,7 +12,7 @@ const schoolsSelector = createSelector(
       .filter((school) => {
         return schoolFilters
           .reduce((aggregateValue, field) => {
-            return aggregateValue && !!school.get(field);
+            return aggregateValue && !!school.getIn(field);
           }, true);
       });
   }
@@ -37,7 +37,7 @@ const schoolStudentsSelector = createSelector(
   }
 );
 
-export default {
+module.exports = {
   schools: schoolsSelector,
   schoolStudents: schoolStudentsSelector,
 };

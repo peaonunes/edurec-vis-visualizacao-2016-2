@@ -12,10 +12,8 @@ export default function schoolsReducer(schools = Map(), action) {
       const { schoolId, student } = action.payload;
 
       return schools.update(schoolId, (schoolMap) => {
-        return schoolMap.withMutations((map) => {
-          const studentsList = map.get('students', List());
-
-          return map.set('students', studentsList.push(Map(student)));
+        return schoolMap.update('students', List(), (studentsList) => {
+          return studentsList.push(Map(student));
         });
       });
     default:
