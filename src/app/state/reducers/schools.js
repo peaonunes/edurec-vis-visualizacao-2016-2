@@ -1,13 +1,13 @@
 import { actionTypes } from '../actions/schools';
 
-import { List, Map } from 'immutable';
+import Immutable, { List, Map } from 'immutable';
 
 export default function schoolsReducer(schools = Map(), action) {
   switch (action.type) {
     case actionTypes.ADD_SCHOOL:
       const { school } = action.payload;
 
-      return schools.set(school['_id'], Map(school));
+      return schools.set(school['_id'], Immutable.fromJS(school));
     case actionTypes.ADD_STUDENT:
       const { schoolId, student } = action.payload;
 
@@ -16,8 +16,8 @@ export default function schoolsReducer(schools = Map(), action) {
           const studentsList =
             mutableSchoolMap
               .get('students', List())
-              .push(Map(student));
-          
+              .push(Immutable.fromJS(student));
+
           const approvedStudents = mutableSchoolMap.get('approvedStudents', 0);
 
           mutableSchoolMap
@@ -27,7 +27,7 @@ export default function schoolsReducer(schools = Map(), action) {
         });
 
         return schoolMap.update('students', List(), (studentsList) => {
-          return studentsList.push(Map(student));
+          return studentsList.push(Immutable.fromJS(student));
         });
       });
     default:
