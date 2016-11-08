@@ -4,12 +4,17 @@ import { schools as schoolsSelector } from '../state/selectors';
 
 export var map;
 
-export function renderMap(state) {
+export function renderMap(store) {
+    function innerRender() {
+        const schools = schoolsSelector(store.getState()).toJS();
+
+        renderMarkers(schools);
+    }
+
     setupMap();
 
-    const schools = schoolsSelector(state).toJS();
-
-    renderMarkers(schools);
+    innerRender();
+    store.subscribe(innerRender);
 }
 
 function setupMap(){

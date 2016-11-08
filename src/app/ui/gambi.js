@@ -17,15 +17,15 @@ window.onclick = function(e) {
 window.filterChanged = function(e) {
   if(e.classList.contains('dependencia'))
     store.dispatch(schoolFilterActions.toggleSchoolFilter("depedencias." + e.value));
-  if(e.classList.contains('servico'))
-    store.dispatch(schoolFilterActions.toggleSchoolFilter("servicos." + e.value));
-  if(e.classList.contains('nota'))
-    store.dispatch(schoolFilterActions.toggleSchoolFilter(e.value));
-  if(e.classList.contains('grau'))
-    store.dispatch(studentFilterActions.toggleSchoolFilter("graus." + e.value));
-  if(e.classList.contains('turno'))
-    store.dispatch(studentFilterActions.toggleSchoolFilter("turnos." + e.value));
-}
+  // if(e.classList.contains('servico'))
+  //   store.dispatch(schoolFilterActions.toggleSchoolFilter("servicos." + e.value));
+  // if(e.classList.contains('nota'))
+  //   store.dispatch(schoolFilterActions.toggleSchoolFilter(e.value));
+  // if(e.classList.contains('grau'))
+  //   store.dispatch(studentFilterActions.toggleSchoolFilter("graus." + e.value));
+  // if(e.classList.contains('turno'))
+  //   store.dispatch(studentFilterActions.toggleSchoolFilter("turnos." + e.value));
+};
 
 window.closeDropdowns = function() {
   var dropdowns = document.getElementsByClassName("dropdown-content");

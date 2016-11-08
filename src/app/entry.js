@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         store.dispatch(schoolActions.addStudent(parseInt(student.escola), student));
       });
 
-      renderMap(store.getState());
+      renderMap(store);
     });
   });
 
