@@ -7,15 +7,22 @@ import { actionCreators as studentFilterActions } from './state/actions/studentF
 import Immutable, {List} from 'immutable';
 const d3 = require('d3');
 import { renderMap } from './ui/map.js';
+import { calculateSchoolGrade } from './ui/metrics.js';
+import './ui/gambi.js';
 
 const store = storeFactory();
+window.store = store;
 
 const appContent = d3.select('#content');
 
 document.addEventListener('DOMContentLoaded', () => {
-  // renderMap();
+  renderMap();
 
-  renderReduxExample();
+  //renderReduxExample();
+
+  var s = calculateSchoolGrade();
+  for(var i = 0; i < s.length; i++)
+    console.log("grade: " + s[i].grade);
 });
 
 function renderReduxExample() {

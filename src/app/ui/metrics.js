@@ -6,7 +6,7 @@ var schools = [
         "email": "EM.TEREZINHABATISTA@EDUCARECIFE.COM.BR",
         "lat": -8.014138299999999,
         "lng": -34.8813573,
-        "alunos": [
+        "students": [
           {
             "nome": "camila",
             "SITU": "AP"
@@ -28,7 +28,7 @@ var schools = [
        "email": "EM.TEREZINHABATISTA@EDUCARECIFE.COM.BR",
        "lat": -8.014138299999999,
        "lng": -34.8813573,
-       "alunos": [
+       "students": [
          {
            "nome": "camila",
            "SITU": "AP"
@@ -44,7 +44,7 @@ var schools = [
 export function calculateSchoolGrade() {
   for(var i = 0; i < schools.length; i++) {
     var school = schools[i];
-    var students = school.alunos;
+    var students = school.students;
     var ap = 0;
     var total = 0;
     for(var j = 0; j < students.length; j++) {
