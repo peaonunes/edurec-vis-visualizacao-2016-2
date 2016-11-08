@@ -43,19 +43,22 @@ function renderMarkers(schools) {
 
     Object.keys(schools).forEach((schoolId) => {
         const school = schools[schoolId];
-        const {lat, lng} = school.endereco.geometry.location;
 
-        var marker = leaflet.marker([lat, lng]).addTo(map)
-          .bindPopup(moreDetails(school)).openPopup();
+        if(!markers.hasOwnProperty(schoolId)){
+            const {lat, lng} = school.endereco.geometry.location;
 
-        markers[school._id] = marker;
+            var marker = leaflet.marker([lat, lng]).addTo(map)
+              .bindPopup(moreDetails(school)).openPopup();
 
-        marker.on("mouseover", function (e) {
-            this.openPopup();
-        });
-        marker.on("mouseout", function (e) {
-            this.closePopup();
-        });
+            markers[school._id] = marker;
+
+            marker.on("mouseover", function (e) {
+                this.openPopup();
+            });
+            marker.on("mouseout", function (e) {
+                this.closePopup();
+            });
+        }
     });
 }
 
@@ -63,6 +66,7 @@ function filterOldMarks(schools){
     Object.keys(markers).forEach((markerId) => {
         if(!schools.hasOwnProperty(markerId))
             map.removeLayer(markers[markerId]);
+            delete markers[markerId];
     });
 }
 
