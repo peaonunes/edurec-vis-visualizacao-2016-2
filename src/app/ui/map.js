@@ -1,38 +1,13 @@
 const leaflet = require('leaflet');
 const d3 = require('d3');
+import { schools as schoolsSelector } from '../state/selectors';
 
 export var map;
 
-export function renderMap() {
+export function renderMap(state) {
     setupMap();
 
-    // TODO: Get schools data from state.
-    var schools = [
-        {
-            "nome": "ESCOLA MUNICIPAL IRMA TEREZINHA BATISTA - ANEXO I",
-            "rank": 80,
-            "address": "R. dos Craveiros, 273 - Campina do Barreto, Recife - PE, 52121-370, Brazil",
-            "email": "EM.TEREZINHABATISTA@EDUCARECIFE.COM.BR",
-            "lat": -8.014138299999999,
-            "lng": -34.8813573
-        },
-        {
-            "nome": "ESCOLA MUNICIPAL ENGENHEIRO UMBERTO GONDIM",
-            "lat": -8.0847,
-            "rank": 60,
-            "email": "ESCUMBERTO@YAHOO.COM.BR",
-            "address": "R. das Oficinas, 13 - Pina, Recife - PE, 51010-680, Brazil",
-            "lng": -34.884
-        },
-        {
-            "nome": "ESCOLA MUNICIPAL POETA PAULO BANDEIRA DA CRUZ",
-            "email": "EM.POETAPBANDEIRA@HOTMAIL.COM",
-            "address": "R. Panelas, 28 - COHAB, Recife - PE, Brazil",
-            "rank":75,
-            "lat": -8.121,
-            "lng": -34.955
-        }
-    ];
+    const schools = schoolsSelector(state).toJS();
 
     renderMarkers(schools);
 }
@@ -56,10 +31,12 @@ function setupMap(){
 }
 
 function renderMarkers(schools) {
-    for (var index in schools){
-        var school = schools[index];
-        var marker = leaflet.marker([school["lat"], school["lng"]]).addTo(map)
-            .bindPopup(moreDetails(school)).openPopup();
+    Object.keys(schools).forEach((schoolId) => {
+        const school = schools[schoolId];
+        const {lat, lng} = school.endereco.geometry.location;
+
+        var marker = leaflet.marker([lat, lng]).addTo(map)
+          .bindPopup(moreDetails(school)).openPopup();
 
         marker.on("mouseover", function (e) {
             this.openPopup();
@@ -67,14 +44,14 @@ function renderMarkers(schools) {
         marker.on("mouseout", function (e) {
             this.closePopup();
         });
-    }
+    });
 }
 
 function moreDetails(school){
     var st = detailsLayout.replace("#rank", school["rank"]);
-    st = st.replace("#name", school["nome"]);
-    st = st.replace("#address", school["address"]);
-    st = st.replace("#email", school["email"]);
+    st = st.replace("#name", school.nome);
+    st = st.replace("#address", school.endereco.address);
+    st = st.replace("#email", school.email);
     return st;
 }
 

@@ -12,23 +12,19 @@ window.store = store;
 const appContent = d3.select('#content');
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderMap();
-
   d3.json('./escolas2015.json', (schools) => {
     Object.keys(schools.entries).forEach((schoolId) => {
       store.dispatch(schoolActions.addSchool(schools.entries[schoolId]));
     });
 
     d3.json('./estudantes2015.json', (students) => {
-      console.log(store.getState().schools.toJS()[16].students);
-
       Object.keys(students.entries).forEach((studentId) => {
         const student = students.entries[studentId];
 
         store.dispatch(schoolActions.addStudent(parseInt(student.escola), student));
       });
 
-      console.log(store.getState().schools.toJS()[16].students.length);
+      renderMap(store.getState());
     });
   });
 

@@ -37,7 +37,7 @@ const schoolStudentsSelector = createSelector(
   }
 );
 
-export default {
+module.exports = {
   schools: schoolsSelector,
   schoolStudents: schoolStudentsSelector,
 };
