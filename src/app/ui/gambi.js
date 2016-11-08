@@ -16,7 +16,7 @@ window.onclick = function(e) {
 
 window.filterChanged = function(e) {
   if(e.classList.contains('dependencia'))
-    store.dispatch(schoolFilterActions.toggleSchoolFilter("depedencias." + e.value));
+    store.dispatch(schoolFilterActions.toggleSchoolFilter("dependencias." + e.value));
   // if(e.classList.contains('servico'))
   //   store.dispatch(schoolFilterActions.toggleSchoolFilter("servicos." + e.value));
   // if(e.classList.contains('nota'))
