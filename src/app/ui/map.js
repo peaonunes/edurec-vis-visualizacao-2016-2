@@ -53,7 +53,7 @@ function renderMarkers(schools) {
 }
 
 function moreDetails(school){
-    var st = detailsLayout.replace("#rank", school["rank"]);
+    var st = detailsLayout.replace("#rank", school.rank);
     st = st.replace("#name", school.nome);
     st = st.replace("#address", school.endereco.address);
     st = st.replace("#email", school.email);

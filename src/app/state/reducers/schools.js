@@ -12,6 +12,20 @@ export default function schoolsReducer(schools = Map(), action) {
       const { schoolId, student } = action.payload;
 
       return schools.update(schoolId, (schoolMap) => {
+        return schoolMap.withMutations((mutableSchoolMap) => {
+          const studentsList =
+            mutableSchoolMap
+              .get('students', List())
+              .push(Map(student));
+          
+          const approvedStudents = mutableSchoolMap.get('approvedStudents', 0);
+
+          mutableSchoolMap
+            .set('students', studentsList)
+            .set('approvedStudents', approvedStudents + 1)
+            .set('rank', ((approvedStudents / studentsList.size) * 100).toFixed(2));
+        });
+
         return schoolMap.update('students', List(), (studentsList) => {
           return studentsList.push(Map(student));
         });

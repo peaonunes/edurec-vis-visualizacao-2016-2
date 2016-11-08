@@ -27,8 +27,4 @@ document.addEventListener('DOMContentLoaded', () => {
       renderMap(store);
     });
   });
-
-  var s = calculateSchoolGrade();
-  for(var i = 0; i < s.length; i++)
-    console.log("grade: " + s[i].grade);
 });
