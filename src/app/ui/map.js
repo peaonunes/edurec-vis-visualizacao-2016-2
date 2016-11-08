@@ -61,7 +61,6 @@ function renderMarkers(schools) {
 
 function filterOldMarks(schools){
     Object.keys(markers).forEach((markerId) => {
-        console.log(markerId);
         if(!schools.hasOwnProperty(markerId))
             map.removeLayer(markers[markerId]);
     });
