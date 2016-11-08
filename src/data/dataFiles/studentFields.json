@@ -1,0 +1,10 @@
+{
+  "mappings": {
+    "ANOENSINO": "ano",
+    "NTURESNOME": "turno",
+    "NMODENNOME": "grau",
+    "TURMA": "turma",
+    "SITU": "situacao",
+    "ESITALDESC": "descricao_situacao"
+  }
+}
