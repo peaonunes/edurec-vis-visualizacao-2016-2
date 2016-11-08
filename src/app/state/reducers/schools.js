@@ -25,10 +25,6 @@ export default function schoolsReducer(schools = Map(), action) {
             .set('approvedStudents', approvedStudents + 1)
             .set('rank', ((approvedStudents / studentsList.size) * 100).toFixed(2));
         });
-
-        return schoolMap.update('students', List(), (studentsList) => {
-          return studentsList.push(Immutable.fromJS(student));
-        });
       });
     default:
       return schools;

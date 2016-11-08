@@ -12,7 +12,7 @@ const schoolsSelector = createSelector(
       .filter((school) => {
         return schoolFilters
           .reduce((aggregateValue, field) => {
-            return aggregateValue && !!school.getIn(field);
+            return aggregateValue && !!school.getIn(field.split('.'));
           }, true);
       });
   }
