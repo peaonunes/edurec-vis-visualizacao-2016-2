@@ -35,7 +35,12 @@ function setupMap(){
     }).addTo(map);
 }
 
+var markers = {};
+
 function renderMarkers(schools) {
+    if (!(Object.keys(markers).length === 0))
+        filterOldMarks(schools);
+
     Object.keys(schools).forEach((schoolId) => {
         const school = schools[schoolId];
         const {lat, lng} = school.endereco.geometry.location;
@@ -43,12 +48,22 @@ function renderMarkers(schools) {
         var marker = leaflet.marker([lat, lng]).addTo(map)
           .bindPopup(moreDetails(school)).openPopup();
 
+        markers[school._id] = marker;
+
         marker.on("mouseover", function (e) {
             this.openPopup();
         });
         marker.on("mouseout", function (e) {
             this.closePopup();
         });
+    });
+}
+
+function filterOldMarks(schools){
+    Object.keys(markers).forEach((markerId) => {
+        console.log(markerId);
+        if(!schools.hasOwnProperty(markerId))
+            map.removeLayer(markers[markerId]);
     });
 }
 
