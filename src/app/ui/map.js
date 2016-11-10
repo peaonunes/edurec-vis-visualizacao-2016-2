@@ -47,7 +47,7 @@ function renderMarkers(schools) {
         if(!markers.hasOwnProperty(schoolId)){
             const {lat, lng} = school.endereco.geometry.location;
 
-            var marker = leaflet.marker([lat, lng]).addTo(map)
+            var marker = leaflet.circle([lat, lng], {color:'red',fillColor:'#f03', fillOpacity:0.5, radious:10}).addTo(map)
               .bindPopup(moreDetails(school)).openPopup();
 
             markers[school._id] = marker;
