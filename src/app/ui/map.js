@@ -44,9 +44,7 @@ function setupMap(){
 }
 
 function renderMarkers(schools) {
-  if (Object.keys(markers).length !== 0) {
-    filterOldMarks(schools);
-  }
+  clearMapMarkers(schools);
 
   schools.keySeq().forEach((schoolId) => {
     const school = schools.get(schoolId);
@@ -55,27 +53,37 @@ function renderMarkers(schools) {
     const lat = schoolLocation.get('lat');
     const lng = schoolLocation.get('lng');
 
-            var marker = leaflet.circle([lat, lng], {color:'red',fillColor:'#f03', fillOpacity:0.5, radious:10}).addTo(map)
-              .bindPopup(moreDetails(school)).openPopup();
+    if (!markers[schoolId]) {
+      var marker = leaflet
+        .circleMarker([lat, lng], {
+          color: '#black',
+          weight: 3,
+          fillColor: '#f03',
+          fillOpacity: 0.5,
+          radius: 10
+        })
+        .addTo(map)
+        .bindPopup(moreDetails(school));
 
-    markers[school._id] = marker;
-    console.log(marker);
+      markers[schoolId] = marker;
+      console.log(marker);
 
-    marker.on("mouseover", function (e) {
-      this.openPopup();
-    });
+      marker.on("mouseover", function() {
+        this.openPopup();
+      });
 
-    marker.on("mouseout", function (e) {
-      this.closePopup();
-    });
+      marker.on("mouseout", function() {
+        this.closePopup();
+      });
+    } else {
+      map.addLayer(markers[schoolId]);
+    }
   });
 }
 
-function filterOldMarks(schools){
+function clearMapMarkers(){
   Object.keys(markers).forEach((markerId) => {
-    if(!schools.hasOwnProperty(markerId))
-      map.removeLayer(markers[markerId]);
-    delete markers[markerId];
+    map.removeLayer(markers[markerId]);
   });
 }
 
@@ -88,12 +96,12 @@ function moreDetails(school){
   const layout =
 `<div>
   <div>
-    <h5>${rank}</h5>
+    <h5>${rank || 'Sem nota'}</h5>
   </div>
   <div>
-    <h5>${nome}</h5><br />
-    <p>${endereco}</p><br />
-    <p>${email}</p><br />
+    <h5>${nome}</h5>
+    <p>${endereco}</p>
+    <p>${email}</p>
   </div>
 </div>`;
 
