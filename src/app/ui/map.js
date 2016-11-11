@@ -66,7 +66,6 @@ function renderMarkers(schools) {
         .bindPopup(moreDetails(school));
 
       markers[schoolId] = marker;
-      console.log(marker);
 
       marker.on("mouseover", function() {
         this.openPopup();
