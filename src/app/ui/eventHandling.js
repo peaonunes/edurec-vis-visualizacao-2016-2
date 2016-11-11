@@ -24,7 +24,7 @@ export function setupDropdownElements() {
     });
 }
 
-export function setupFilterCheckboxes() {
+export function setupFilterCheckboxes(store) {
   d3.selectAll('.school-filter')
     .on('change', function() {
       store.dispatch(schoolFilterActions.toggleSchoolFilter(this.value));

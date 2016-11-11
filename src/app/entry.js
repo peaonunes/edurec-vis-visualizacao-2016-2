@@ -1,13 +1,11 @@
 import storeFactory from './state/storeFactory';
 import { actionCreators as schoolActions } from './state/actions/schools';
 import { renderMap } from './ui/map.js';
-import { setupDropdownElements, setupFilterCheckboxes } from './ui/gambi';
-import './ui/gambi.js';
+import { setupDropdownElements, setupFilterCheckboxes } from './ui/eventHandling';
 
 const d3 = require('d3');
 
 const store = storeFactory();
-window.store = store;
 
 document.addEventListener('DOMContentLoaded', () => {
   loadData(() => {
@@ -35,5 +33,5 @@ function loadData(callback) {
   });
 
   setupDropdownElements();
-  setupFilterCheckboxes();
+  setupFilterCheckboxes(store);
 }
