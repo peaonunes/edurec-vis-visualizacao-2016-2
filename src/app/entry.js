@@ -1,7 +1,7 @@
 import storeFactory from './state/storeFactory';
 import { actionCreators as schoolActions } from './state/actions/schools';
 import { renderMap } from './ui/map.js';
-import { setupDropdownElements, setupFilterCheckboxes } from './ui/eventHandling';
+import { setupDropdownElements, setupFilterCheckboxes } from './ui/filterBar';
 
 const d3 = require('d3');
 
