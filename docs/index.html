@@ -9,69 +9,79 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
 </head>
 <body>
+  <div id="filterBar" class="row stretch fixed">
+    <h1>EDUREC</h1>
+    <div class="row stretch">
+      <ul class="row stretch dropdown-list">
+        <li class="dropdown" data-dropdown="dropdownNota">
+          <span class="dropdown-label">Nota</span>
+          <div class="dropdown-content" id="dropdownNota">
+            <input type="checkbox" value="0-3" class="filter-checkbox" checked>0-3</input>
+            <br/>
+            <input type="checkbox" value="3-5" class="filter-checkbox" checked>3-5</input>
+            <br/>
+            <input type="checkbox" value="5-7" class="filter-checkbox" checked>5-7</input>
+            <br/>
+            <input type="checkbox" value="7-9" class="filter-checkbox" checked>7-9</input>
+            <br/>
+            <input type="checkbox" value="9-10" class="filter-checkbox" checked>9-10</input>
+          </div>
+        </li>
+        <li class="dropdown" data-dropdown="dropdownDependencias">
+          <span class="dropdown-label">Dependências</span>
+          <div class="dropdown-content" id="dropdownDependencias">
+            <input type="checkbox" value="dependencias.biblioteca" class="filter-checkbox school-filter">Biblioteca</input>
+            <br/>
+            <input type="checkbox" value="dependencias.cozinha" class="filter-checkbox school-filter">Cozinha</input>
+            <br/>
+            <input type="checkbox" value="dependencias.refeitorio" class="filter-checkbox school-filter">Refeitório</input>
+          </div>
+        </li>
+        <li class="dropdown" data-dropdown="dropdownServicos">
+          <span class="dropdown-label">Serviços básicos</span>
+          <div class="dropdown-content" id="dropdownServicos">
+            <input type="checkbox" value="agua" class="filter-checkbox school-filter">Água</input>
+            <br/>
+            <input type="checkbox" value="energia" class="filter-checkbox school-filter">Energia</input>
+            <br/>
+            <input type="checkbox" value="esgoto" class="filter-checkbox school-filter">Esgoto</input>
+          </div>
+        </li>
+      </ul>
+
+      <ul class="row stretch dropdown-list">
+        <li class="dropdown" data-dropdown="dropdownGrau">
+          <span class="dropdown-label">Ciclos de ensino</span>
+          <div class="dropdown-content" id="dropdownGrau">
+            <input type="checkbox" value="Infantil" class="filter-checkbox student-filter" data-field="grau" checked>Infantil</input>
+            <br/>
+            <input type="checkbox" value="Fundamental" class="filter-checkbox student-filter" data-field="grau" checked>Fundamental</input>
+            <br/>
+            <input type="checkbox" value="Médio" class="filter-checkbox student-filter" data-field="grau" checked>Médio</input>
+          </div>
+        </li>
+        <li class="dropdown" data-dropdown="dropdownTurno">
+          <span class="dropdown-label">Turno</span>
+          <div class="dropdown-content" id="dropdownTurno">
+            <input type="checkbox" value="Manhã" class="filter-checkbox student-filter" data-field="turno" checked>Manhã</input>
+            <br/>
+            <input type="checkbox" value="Tarde" class="filter-checkbox student-filter" data-field="turno" checked>Tarde</input>
+            <br/>
+            <input type="checkbox" value="Noite" class="filter-checkbox student-filter" data-field="turno" checked>Noite</input>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="topbar-padding"></div>
   <div id="content">
-    <div id="mapView">
-      <div id="filterBar">
-        <ul>
-          <li class="dropdown">
-            <a href="">EDUREC v0.1</a>
-          </li>
-          <li class="dropdown">
-            <a class="dropbtn" data-dropdown="dropdownDependencias">Dependências</a>
-            <div class="dropdown-content" id="dropdownDependencias">
-              <input type="checkbox" value="dependencias.biblioteca" class="filter-checkbox school-filter">Biblioteca</input>
-              <br/>
-              <input type="checkbox" value="dependencias.cozinha" class="filter-checkbox school-filter">Cozinha</input>
-              <br/>
-              <input type="checkbox" value="dependencias.refeitorio" class="filter-checkbox school-filter">Refeitório</input>
-            </div>
-          </li>
-          <li class="dropdown">
-            <a class="dropbtn" data-dropdown="dropdownServicos">Serviços básicos</a>
-            <div class="dropdown-content" id="dropdownServicos">
-              <input type="checkbox" value="agua" class="filter-checkbox school-filter">Água</input>
-              <br/>
-              <input type="checkbox" value="energia" class="filter-checkbox school-filter">Energia</input>
-              <br/>
-              <input type="checkbox" value="esgoto" class="filter-checkbox school-filter">Esgoto</input>
-            </div>
-          </li>
-          <li class="dropdown">
-            <a class="dropbtn" data-dropdown="dropdownGrau">Ciclos de ensino</a>
-            <div class="dropdown-content" id="dropdownGrau">
-              <input type="checkbox" value="Infantil" class="filter-checkbox student-filter" data-field="grau" checked>Infantil</input>
-              <br/>
-              <input type="checkbox" value="Fundamental" class="filter-checkbox student-filter" data-field="grau" checked>Fundamental</input>
-              <br/>
-              <input type="checkbox" value="Médio" class="filter-checkbox student-filter" data-field="grau" checked>Médio</input>
-            </div>
-          </li>
-          <li class="dropdown">
-            <a class="dropbtn" data-dropdown="dropdownTurno">Turno</a>
-            <div class="dropdown-content" id="dropdownTurno">
-              <input type="checkbox" value="Manhã" class="filter-checkbox student-filter" data-field="turno" checked>Manhã</input>
-              <br/>
-              <input type="checkbox" value="Tarde" class="filter-checkbox student-filter" data-field="turno" checked>Tarde</input>
-              <br/>
-              <input type="checkbox" value="Noite" class="filter-checkbox student-filter" data-field="turno" checked>Noite</input>
-            </div>
-          </li>
-          <li class="dropdown">
-            <a class="dropbtn" data-dropdown="dropdownNota">Nota</a>
-            <div class="dropdown-content" id="dropdownNota">
-              <input type="checkbox" value="0-3" class="filter-checkbox" checked>0-3</input>
-              <br/>
-              <input type="checkbox" value="3-5" class="filter-checkbox" checked>3-5</input>
-              <br/>
-              <input type="checkbox" value="5-7" class="filter-checkbox" checked>5-7</input>
-              <br/>
-              <input type="checkbox" value="7-9" class="filter-checkbox" checked>7-9</input>
-              <br/>
-              <input type="checkbox" value="9-10" class="filter-checkbox" checked>9-10</input>
-            </div>
-          </li>
-        </ul>
-      </div>
+    <div class="app-section row stretch map-row">
+      <div id="map"></div>
+      <div id="mapDetails"></div>
+    </div>
+    <div class="app-section overview-row">
+      <h1>Visão geral</h1>
     </div>
   </div>
   <script src="bundle.js"></script>

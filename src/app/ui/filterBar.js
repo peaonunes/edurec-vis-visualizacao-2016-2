@@ -1,25 +1,29 @@
-import './stylesheets/filterBar.scss';
-
 import { actionCreators as schoolFilterActions } from '../state/actions/schoolFilters';
 import { actionCreators as studentFilterActions } from '../state/actions/studentFilters';
 
 var d3 = require('d3');
 
 export function setupDropdownElements() {
-  d3.selectAll('.dropbtn')
+  d3.selectAll('.dropdown')
     .on('click', function() {
-      d3.select('.dropdown-content.show')
-        .classed('show', false);
+      if (!d3.event.target.matches('.filter-checkbox')) {
+        const clickedDropdown = d3.select(this);
+        const dropdownContent = clickedDropdown.select(`#${this.dataset.dropdown}`);
+        const shouldShow = !dropdownContent.classed('show');
 
-      d3.select(`#${this.dataset.dropdown}`)
-        .classed('show', true);
+        d3.select('.dropdown-content.show')
+          .classed('show', false);
+
+        dropdownContent
+          .classed('show', shouldShow);
+      }
     });
 
   d3.select(window)
     .on('click', function() {
       const {target} = d3.event;
 
-      if (!target.matches('.dropbtn') && !target.matches('.filter-checkbox')) {
+      if (!target.matches('.dropdown, .dropdown-label') && !target.matches('.filter-checkbox')) {
         d3.select('.dropdown-content.show')
           .classed('show', false);
       }
@@ -43,4 +47,12 @@ export function setupFilterCheckboxes(store) {
 
       store.dispatch(studentFilterActions.addStudentFilter(dataField, checkedOptions));
     });
+}
+
+export function adjustContentSectionPadding() {
+  const topbar = d3.select('#filterBar');
+  const topbarHeight = topbar.node().getBoundingClientRect().height;
+
+  d3.select('#topbar-padding')
+    .style('flex-basis', `${topbarHeight}px`);
 }
