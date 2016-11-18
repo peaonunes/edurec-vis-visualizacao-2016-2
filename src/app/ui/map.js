@@ -1,6 +1,7 @@
 const leaflet = require('leaflet');
 const d3 = require('d3');
 import { schools as schoolsSelector } from '../state/selectors';
+import { actionCreators as schoolSelectionActions } from '../state/actions/schoolSelection';
 
 let map;
 let markers = {};
@@ -9,7 +10,7 @@ export function renderMap(store) {
   function innerRender() {
     const schools = schoolsSelector(store.getState());
 
-    renderMarkers(schools);
+    renderMarkers(store, schools);
   }
 
   setupMap();
@@ -43,7 +44,7 @@ function setupMap(){
   }).addTo(map);
 }
 
-function renderMarkers(schools) {
+function renderMarkers(store, schools) {
   clearMapMarkers(schools);
 
   schools.keySeq().forEach((schoolId) => {
@@ -60,19 +61,16 @@ function renderMarkers(schools) {
           weight: 3,
           fillColor: '#f03',
           fillOpacity: 0.5,
-          radius: 10
+          radius: 10,
+          dataID: schoolId
         })
-        .addTo(map)
-        .bindPopup(moreDetails(school));
+        .addTo(map);
 
       markers[schoolId] = marker;
 
-      marker.on("mouseover", function() {
-        this.openPopup();
-      });
-
-      marker.on("mouseout", function() {
-        this.closePopup();
+      marker.on("click", function(d, a) {
+        store.dispatch(schoolSelectionActions.deselectSchool());
+        store.dispatch(schoolSelectionActions.selectSchool(schools.get(d.target.options.dataID)));
       });
     } else {
       map.addLayer(markers[schoolId]);
@@ -84,25 +82,4 @@ function clearMapMarkers(){
   Object.keys(markers).forEach((markerId) => {
     map.removeLayer(markers[markerId]);
   });
-}
-
-function moreDetails(school){
-  const rank = school.get('rank');
-  const nome = school.get('nome');
-  const endereco = school.getIn([ 'endereco', 'address' ]);
-  const email = school.get('email');
-
-  const layout =
-`<div>
-  <div>
-    <h5>${rank || 'Sem nota'}</h5>
-  </div>
-  <div>
-    <h5>${nome}</h5>
-    <p>${endereco}</p>
-    <p>${email}</p>
-  </div>
-</div>`;
-
-  return layout;
 }
