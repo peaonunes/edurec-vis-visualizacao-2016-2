@@ -19,18 +19,19 @@ export function renderMap(store) {
 }
 
 function setupMap(){
-  const content = d3.select("#content");
+  const mapContainer = d3.select("#map");
+  const {width, height} = mapContainer.node().getBoundingClientRect();
 
-  const mapGroup = content
-    .selectAll('#map')
+  const mapGroup = mapContainer
+    .selectAll('#map-content')
     .data([null]);
 
   mapGroup
     .enter()
     .append('div')
-    .attr('id', 'map')
+    .attr('id', 'map-content')
     .merge(mapGroup)
-    .attr("style", "height: 500px !important; width: 900px !important;");
+    .attr("style", `height: ${height}px !important; width: ${width}px !important;`);
 
   map = leaflet.map("map").setView([-8.079, -34.920], 12);
 
