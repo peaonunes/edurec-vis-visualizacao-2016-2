@@ -5,6 +5,8 @@ import { actionCreators as schoolActions } from './state/actions/schools';
 import { renderMap } from './ui/map.js';
 import { setupDropdownElements, setupFilterCheckboxes, adjustContentSectionPadding } from './ui/filterBar';
 
+import { renderParallel } from './ui/parallel.js';
+
 const d3 = require('d3');
 
 const store = storeFactory();
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadData(() => {
     renderMap(store);
+    renderParallel(store);
   });
 });
 
