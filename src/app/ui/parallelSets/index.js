@@ -2,7 +2,6 @@ import './d3.parsets.scss';
 
 const d3v3 = require('./d3v3');
 const setupParsetFunction = require('./d3.parsets');
-// require('./d3-workaround');
 
 setupParsetFunction(d3v3);
 
@@ -26,7 +25,7 @@ function renderCheckboxes() {
 
     parallaelDiv.append("div")
         .attr("id", "options")
-        .attr("style", "width: "+chart.width()+"; height: 30px; border-left-style: solid; background-color: #333; padding-top:10px");
+        .attr("style", "width: 960px; height: 30px; border-left-style: solid; background-color: #333; padding-top:10px");
 
     var options = parallaelDiv.select("#options");
 
