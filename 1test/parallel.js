@@ -30,7 +30,6 @@ function renderCheckboxes() {
 }
 
 function renderParallel() {
-
     d3.select("#content").select("svg").remove();
 
     var vis = d3.select("#content").append("svg")

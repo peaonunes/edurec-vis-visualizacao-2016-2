@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 
@@ -35,6 +36,12 @@ module.exports = {
       },
     ],
   },
+
+  plugins: [
+    new webpack.ProvidePlugin({
+      d3: 'd3',
+    }),
+  ],
 
   postcss () {
     return [autoprefixer];
