@@ -9,30 +9,26 @@ setupParsetFunction(d3v3);
 let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
 let chart = d3v3.parsets();
 let storeApp;
+let width = screen.width*0.6;
 
 export function renderParallelSetsChart(store){
     storeApp = store;
-    renderCheckboxes(store);
+    renderOptions('#options');
     function innerRender() {
         const {schools} = store.getState();
 
-        renderParallelSet('#parallelSets', schools);
+        renderParallelSet('#parallel', schools);
     }
 
     innerRender();
     store.subscribe(innerRender);
 }
 
-function renderCheckboxes() {
-    var parallaelDiv = d3.select("#parallelSets");
-
-    parallaelDiv.append("div")
-        .attr("id", "options")
-        .attr("style", "width: 960px; height: 30px; border-left-style: solid; background-color: #333; padding-top:10px");
-
-    var options = parallaelDiv.select("#options");
-
-    options.selectAll("input")
+function renderOptions(selector) {
+    var options = d3.select(selector);
+    options
+    .attr("style", "width: "+width+"px; height: 30px; border-left-style: solid; background-color: #616161; padding-top:10px")
+    .selectAll("input")
     .data(headers)
     .enter()
     .append("label")
@@ -45,7 +41,7 @@ function renderCheckboxes() {
         .attr("id", function(d,i) { return d; })
         .on("click", function(d, i){
             selectFeature(d);
-        });
+    });
 }
 
 function selectFeature(fieldName) {
@@ -56,12 +52,14 @@ function renderParallelSet(selector, schools){
     d3v3.select(selector).select("svg").remove();
 
     var svg = d3v3.select(selector).append("svg")
-      .attr("width", chart.width())
+      .attr("style", "background-color: #f5f5f5")
+      .attr("width", width)
       .attr("height", chart.height());
 
     var filteredCategories = getFilteredCategories();
 
     chart.dimensions(filteredCategories);
+    chart.width(width);
 
     const chartData = schools.reduce((list, school) => {
         list.push({
