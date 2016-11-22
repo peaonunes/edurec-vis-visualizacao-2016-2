@@ -6,9 +6,11 @@ const setupParsetFunction = require('./d3.parsets');
 
 setupParsetFunction(d3v3);
 
+let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
 let chart = d3v3.parsets();
 
 export function renderParallelSetsChart(store){
+    renderCheckboxes();
     function innerRender() {
         const {schools} = store.getState();
 
@@ -19,6 +21,35 @@ export function renderParallelSetsChart(store){
     store.subscribe(innerRender);
 }
 
+function renderCheckboxes() {
+    var parallaelDiv = d3.select("#parallelSets");
+
+    parallaelDiv.append("div")
+        .attr("id", "options")
+        .attr("style", "width: "+chart.width()+"; height: 30px; border-left-style: solid; background-color: #333; padding-top:10px");
+
+    var options = parallaelDiv.select("#options");
+
+    options.selectAll("input")
+    .data(headers)
+    .enter()
+    .append("label")
+        .attr("style", "color: white; padding-left: 20px;")
+        .attr("for",function(d){ return d; })
+        .text(function(d) { return d; })
+    .append("input")
+        .attr("checked", true)
+        .attr("type", "checkbox")
+        .attr("id", function(d,i) { return d; })
+        .on("click", function(d, i){
+                console.log(">> GONNA DISPATCH THE ACTION FOR ", d);
+        });
+}
+
+function hey() {
+    console.log("hey");
+}
+
 function renderParallelSet(selector, schools){
     d3v3.select(selector).select("svg").remove();
 
@@ -26,55 +57,59 @@ function renderParallelSet(selector, schools){
       .attr("width", chart.width())
       .attr("height", chart.height());
 
-    // d3.select(selector).select("svg").remove();
-    //
-    // var vis = d3.select("#content").append("svg")
-    //   .attr("width", chart.width())
-    //   .attr("height", chart.height());
-
     var filteredCategories = getFilteredCategories();
 
     chart.dimensions(filteredCategories);
 
     const chartData = schools.reduce((list, school) => {
         list.push({
-            Agua: extractAgua(school),
-            Energia: extractEnergia(school),
-            Lixo: extractLixo(school),
-            Esgoto: extractEsgoto(school),
+            Merenda : extractMerenda(school),
+            Internet : extractInternet(school),
+            Energia : extractEnergia(school),
+            Esgoto : extractEsgoto(school),
+            Agua : extractAgua(school),
+            Lixo : extractLixo(school),
+            Funcionarios : extractFuncionarios(school),
         });
 
         return list;
     }, []);
 
-    console.log(chartData);
-
     svg.datum(chartData).call(chart);
-
-    // d3.json('./escolas2015.json', (schools) => {
-    //     var entries = schools.entries;
-    //
-    //     var dataset = [];
-    //     Object.keys(entries).forEach((id) => {
-    //         var entry = entries[id];
-    //         var element = {
-    //             Merenda : extractMerenda(entry.alimentacao_escolar),
-    //             Internet : extractInternet(entry.acesso_internet),
-    //             Energia : extractEnergia(entry.energia),
-    //             Esgoto : extractEsgoto(entry.esgoto),
-    //             Agua : extractAgua(entry.agua),
-    //             Lixo : extractLixo(entry.lixo),
-    //             Funcionarios : extractFuncionarios(entry.total_funcionarios)
-    //         };
-    //         dataset.push(element);
-    //     });
-    //
-    //     vis.datum(dataset).call(chart);
-    // });
 }
 
 function getFilteredCategories(){
-    return ['Agua', 'Lixo', 'Esgoto', 'Energia'];
+    return headers;
+}
+
+function extractMerenda(school) {
+    const value = school.get('alimentacao_escolar');
+    if (value != 1)
+        return "Não possui"
+    else
+        return "Possui"
+}
+
+function extractFuncionarios(school) {
+    const value = school.get('total_funcionarios');
+    if (value < 25)
+        return "Até 25";
+    else if (value < 50)
+        return "Até 50";
+    else if (value < 75)
+        return "Até 75";
+    else if (value < 100)
+        return "Até 100";
+    else
+        return "Mais que 100";
+}
+
+function extractInternet(school) {
+    const value = school.get('acesso_internet');
+    if(value != 1)
+        return "Sem internet";
+    else
+        return "Com internet";
 }
 
 function extractEnergia(school) {
@@ -92,7 +127,6 @@ function extractEnergia(school) {
 
 function extractAgua(school) {
     const value = school.get('_agua');
-
     if (value.get('inexistente'))
         return "Inexistente";
     else if (value.get('rede_publica'))
