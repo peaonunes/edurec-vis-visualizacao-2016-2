@@ -1,0 +1,50 @@
+@import "filterBar";
+@import "map";
+@import "overview";
+
+html, body {
+  height: 100%;
+}
+
+h1 {
+  margin: 0;
+}
+
+body {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  & > * {
+    margin: 0 {
+      right: 1rem;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &.stretch {
+    align-items: stretch;
+  }
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#content {
+  height: 100%;
+}
+
+.app-section {
+  height: 90%;
+}
+

@@ -1,0 +1,55 @@
+$filterBarBackground: #333;
+
+#filterBar {
+  background-color: $filterBarBackground;
+  color: white;
+  font-family: sans-serif;
+  width: 100%;
+  z-index: 9999;
+
+  & ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  & > h1 {
+    margin: 1rem;
+    flex: 0 0 auto;
+  }
+
+  & > .row {
+    justify-content: space-between;
+    flex: 1 0 auto;
+  }
+}
+
+.dropdown-list > * {
+  margin-right: 0 !important;
+}
+
+.dropdown {
+  display: flex;
+  position: relative;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 0 1rem;
+
+  transition: 0.25s background-color;
+
+  &:hover {
+    background-color: #A22;
+  }
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding: 1rem;
+  background-color: $filterBarBackground;
+
+  &.show {
+    display: block;
+  }
+}

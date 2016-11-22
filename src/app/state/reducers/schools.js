@@ -7,17 +7,23 @@ export default function schoolsReducer(schools = Map(), action) {
     case actionTypes.ADD_SCHOOL:
       const { school } = action.payload;
 
+      school._agua = school.agua;
       school.agua = Object.keys(school.agua).reduce((aggregate, waterSource) => {
         return aggregate || school.agua[waterSource];
       }, false);
 
+      school._lixo = school.lixo;
       school.lixo = Object.keys(school.lixo).reduce((aggregate, trashDestination) => {
         return aggregate || school.lixo[trashDestination];
       }, false);
 
+      school._esgoto = school.esgoto;
       school.esgoto = Object.keys(school.esgoto).reduce((aggregate, sewerDestination) => {
         return aggregate || school.esgoto[sewerDestination];
       }, false);
+
+      school._energia = school.energia;
+      school.energia = undefined;
 
       return schools.set(school['_id'], Immutable.fromJS(school));
     case actionTypes.ADD_STUDENT:
