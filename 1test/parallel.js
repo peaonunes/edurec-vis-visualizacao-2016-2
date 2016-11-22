@@ -1,6 +1,6 @@
 d3.select("body").append("h1").text("Podemos fazer isso para os dados categoricos de agua, esgoto etc.");
 
-let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo"];
+let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
 let chart = d3.parsets();
 
 function setUp() {
@@ -11,12 +11,17 @@ function setUp() {
 function renderCheckboxes() {
     d3.select("#parallelSets")
         .select("#options")
+        .attr("style", "width: "+chart.width()+"; height: 30px; border-left-style: solid; background-color: #333; padding-top:10px");
+
+    d3.select("#parallelSets")
+        .select("#options")
         .selectAll("input")
         .data(headers)
         .enter()
-        .append('label')
-            .attr('for',function(d){ return d; })
-            .text(function(d) { return " | " + d; })
+        .append("label")
+            .attr("style", "color: white; padding-left: 20px;")
+            .attr("for",function(d){ return d; })
+            .text(function(d) { return d; })
         .append("input")
             .attr("checked", true)
             .attr("type", "checkbox")
@@ -43,11 +48,13 @@ function renderParallel() {
         Object.keys(entries).forEach((id) => {
             var entry = entries[id];
             var element = {
+                Merenda : extractMerenda(entry.alimentacao_escolar),
                 Internet : extractInternet(entry.acesso_internet),
                 Energia : extractEnergia(entry.energia),
                 Esgoto : extractEsgoto(entry.esgoto),
                 Agua : extractAgua(entry.agua),
-                Lixo : extractLixo(entry.lixo)
+                Lixo : extractLixo(entry.lixo),
+                Funcionarios : extractFuncionarios(entry.total_funcionarios)
             };
             dataset.push(element);
         });
@@ -64,6 +71,26 @@ function getFilteredCategories(){
             filtered.push(headers[i]);
     }
     return filtered;
+}
+
+function extractMerenda(value) {
+    if (value != 1)
+        return "Não possui"
+    else
+        return "Possui"
+}
+
+function extractFuncionarios(value) {
+    if (value < 25)
+        return "Até 25";
+    else if (value < 50)
+        return "Até 50";
+    else if (value < 75)
+        return "Até 75";
+    else if (value < 100)
+        return "Até 100";
+    else
+        return "Mais que 100";
 }
 
 function extractInternet(value) {
