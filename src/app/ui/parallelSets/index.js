@@ -1,4 +1,5 @@
 import './d3.parsets.scss';
+import { actionCreators as parallelFiltersActions } from '../../state/actions/parallelFilters';
 
 const d3v3 = require('./d3v3');
 const setupParsetFunction = require('./d3.parsets');
@@ -7,9 +8,11 @@ setupParsetFunction(d3v3);
 
 let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
 let chart = d3v3.parsets();
+let storeApp;
 
 export function renderParallelSetsChart(store){
-    renderCheckboxes();
+    storeApp = store;
+    renderCheckboxes(store);
     function innerRender() {
         const {schools} = store.getState();
 
@@ -41,12 +44,12 @@ function renderCheckboxes() {
         .attr("type", "checkbox")
         .attr("id", function(d,i) { return d; })
         .on("click", function(d, i){
-                console.log(">> GONNA DISPATCH THE ACTION FOR ", d);
+            selectFeature(d);
         });
 }
 
-function hey() {
-    console.log("hey");
+function selectFeature(fieldName) {
+    storeApp.dispatch(parallelFiltersActions.toggleParallelFilter(fieldName));
 }
 
 function renderParallelSet(selector, schools){
@@ -78,7 +81,19 @@ function renderParallelSet(selector, schools){
 }
 
 function getFilteredCategories(){
-    return headers;
+    const {parallelFilters} = storeApp.getState();
+    if (parallelFilters.size < 1){
+        return headers;
+    } else {
+        var filteredList = [];
+        for (var i = 0; i < headers.length; i++) {
+            var fieldName = headers[i];
+            if(!parallelFilters.contains(fieldName))
+                filteredList.push(fieldName);
+        }
+        console.log(filteredList);
+        return filteredList;
+    }
 }
 
 function extractMerenda(school) {
