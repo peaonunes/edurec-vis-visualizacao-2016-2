@@ -1,7 +1,7 @@
 var googleMaps = require('@google/maps');
 
 var gmapsClient = googleMaps.createClient({
-  key: require('../../config/sensitive/gmapsKey')
+  key: require('../../../config/sensitive/gmapsKey')
 });
 
 module.exports = function fetchCoordinatesFromAddressList (addressList, callback) {
