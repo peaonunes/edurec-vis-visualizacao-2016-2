@@ -93,8 +93,8 @@ function renderStudentsDetails(students) {
 
   var data = [];
   var keys = [];
-  var situations = {"RN": "Reprovado por nota", "AP": "Aprovado", "R": "Retido", "D": "Desistiu",
-                    "R": "Retido", "FR": "Fora da rede"};
+  var situations = {"RN": "Reprovado por nota", "AP": "Aprovado", "RT": "Retido", "D": "Desistiu",
+                    "R": "Retido", "FR": "Fora da rede", "MO": "Remanejado"};
 
   Object.keys(studentTypeQt).forEach((key) => {
     data.push(studentTypeQt[key]);
@@ -102,7 +102,7 @@ function renderStudentsDetails(students) {
   });
 
   //piechat
-  var colorScale = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"];
+  var colorScale = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494"];
 
   var arc = d3.arc().innerRadius(0).outerRadius(90);
 
