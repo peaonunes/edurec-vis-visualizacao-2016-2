@@ -54,5 +54,6 @@ export function adjustContentSectionPadding() {
   const topbarHeight = topbar.node().getBoundingClientRect().height;
 
   d3.select('#topbar-padding')
+    .style('height', `${topbarHeight}px`)
     .style('flex-basis', `${topbarHeight}px`);
 }
