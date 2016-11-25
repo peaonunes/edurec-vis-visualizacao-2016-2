@@ -4,7 +4,7 @@ import storeFactory from './state/storeFactory';
 import { actionCreators as schoolActions } from './state/actions/schools';
 import { renderMap } from './ui/map.js';
 import { setupDropdownElements, setupFilterCheckboxes, adjustContentSectionPadding } from './ui/filterBar';
-
+import { showSchoolDetails } from './ui/schoolDetails';
 import { renderParallelSetsChart } from './ui/parallelSets';
 
 const d3 = require('d3');
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadData(() => {
     renderMap(store);
+    showSchoolDetails(store);
     renderParallelSetsChart(store);
   });
 });
