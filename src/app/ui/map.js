@@ -5,6 +5,8 @@ import { actionCreators as schoolSelectionActions } from '../state/actions/schoo
 
 let map;
 let markers = {};
+let qualitativeScale = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc"];
+let rankScale = ["#c7e9c0","#a1d99b","#74c476",'#31a354',"#006d2c"];
 
 export function renderMap(store) {
   function innerRender() {
@@ -62,7 +64,7 @@ function renderMarkers(store, schools) {
         .circleMarker([lat, lng], {
           color: '#black',
           weight: 3,
-          fillColor: '#f03',
+          fillColor: getColor("default"),
           fillOpacity: 0.5,
           radius: 10,
           dataID: schoolId
@@ -85,4 +87,86 @@ function clearMapMarkers(){
   Object.keys(markers).forEach((markerId) => {
     map.removeLayer(markers[markerId]);
   });
+}
+
+function getColor(type, school) {
+    if (type === "default" || type == null)
+        return "#f03";
+    else {
+        if (type === "agua")
+            return extractWater(school);
+        else if (type === "energia")
+            return extractEnergy(school);
+        else if (type === "esgoto")
+            return extractSewer(school);
+        else if (type === "tipo")
+            return extractType(school);
+        else if (type === "nota")
+            return extracRank(school);
+    }
+}
+
+function extractRank(school) {
+    const value = school.get("rank");
+    if (rank < 25)
+        return rankScale[0];
+    else if (rank >= 25 && rank < 50)
+        return rankScale[1];
+    else if (rank >= 50 && rank < 75)
+        return rankScale[2];
+    else
+        return rankScale[3];
+}
+
+function extractType(school) {
+    const value = school.get("tipo");
+    const typeScale = {
+        "creche" : qualitativeScale[0],
+        "ef" : qualitativeScale[1],
+        "em" : qualitativeScale[2],
+        "ef&em" : qualitativeScale[3]
+    };
+    return typeScale[value];
+}
+
+function extractEnergy(school) {
+    const value = school.get('_energia');
+
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('gerador'))
+        return qualitativeScale[2];
+    else
+        return qualitativeScale[3];
+}
+
+function extractWater(school) {
+    const value = school.get('_agua');
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('poco_artesiano'))
+        return qualitativeScale[2];
+    else if (value.get('cacimba'))
+        return qualitativeScale[3];
+    else if (value.get('fonte'))
+        return qualitativeScale[4];
+    else
+        return qualitativeScale[5];
+}
+
+function extractSewer(school) {
+    const value = school.get('_esgoto');
+
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('fossa'))
+        return qualitativeScale[2];
+    else
+        return qualitativeScale[3];
 }
