@@ -84,6 +84,8 @@ function renderStudentsDetails(students) {
     if(studentTypeQt.hasOwnProperty(type)) {
       var value = studentTypeQt[type];
       studentTypeQt[type] = value + 1;
+    } else if(type == "TR" || type == "TA") {
+      studentTypeQt["FR"] = (studentTypeQt.hasOwnProperty("FR") ? studentTypeQt["FR"] + 1 : 1);
     } else {
       studentTypeQt[type] = 1;
     }
@@ -91,7 +93,8 @@ function renderStudentsDetails(students) {
 
   var data = [];
   var keys = [];
-  var situations = {"RN": "Reprovado por nota", "AP": "Aprovado", "R": "Retido", "D": "Desistiu"};
+  var situations = {"RN": "Reprovado por nota", "AP": "Aprovado", "R": "Retido", "D": "Desistiu",
+                    "R": "Retido", "FR": "Fora da rede"};
 
   Object.keys(studentTypeQt).forEach((key) => {
     data.push(studentTypeQt[key]);
