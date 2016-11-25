@@ -33,7 +33,7 @@ function moreDetails(school){
   const quantidade_salas_existentes = school.get('quantidade_salas_existentes');
   const comp_alunos = school.get('equipamentos_comp_alunos');
   const acesso_internet = (school.get('acesso_internet') == true ? 'Possui' : 'Não possui');
-  const total_funcionarios = school.get('total_funcionarios'); 
+  const total_funcionarios = school.get('total_funcionarios');
 
   const layout =
 `<div>
@@ -112,8 +112,24 @@ function renderStudentsDetails(students) {
   .attr("fill", function(d,i) {
     return colorScale[i];
   })
-  .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
-  .on('mouseover', function(d, i) {
-    //console.log(keys[i]);
-  });
+  .attr("transform", "translate(" + 130 + "," + height/2 + ")");
+
+  for(var i = 0; i < keys.length; i++) {
+  //Object.keys(studentTypeQt).forEach((key) => {
+    g.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 10)
+    .attr("height", 10)
+    .attr("transform", "translate(" + 250 + ", " + (height - ((i+1)*20)) + ")")
+    .attr("fill", colorScale[i]);
+
+    schoolDetails.select("svg").append("text")
+    .attr("x", 0)
+    .attr("y", 0)
+    .text(function(d) {
+      return keys[i];
+    })
+    .attr("transform", "translate(" + 265 + ", " + ((i+1)*20) + ")");
+  };
 }
