@@ -1,80 +1,127 @@
 import './d3.parsets.scss';
+import { actionCreators as parallelFiltersActions } from '../../state/actions/parallelFilters';
 
 const d3v3 = require('./d3v3');
 const setupParsetFunction = require('./d3.parsets');
-// require('./d3-workaround');
 
 setupParsetFunction(d3v3);
 
+let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
 let chart = d3v3.parsets();
+let storeApp;
+let width = screen.width*0.6;
 
 export function renderParallelSetsChart(store){
+    storeApp = store;
+    renderOptions('#options');
     function innerRender() {
         const {schools} = store.getState();
 
-        renderParallelSet('#parallelSets', schools);
+        renderParallelSet('#parallel', schools);
     }
 
     innerRender();
     store.subscribe(innerRender);
 }
 
+function renderOptions(selector) {
+    var options = d3.select(selector);
+    options
+    .attr("style", "width: "+width+"px; height: 30px; border-left-style: solid; background-color: #616161; padding-top:10px")
+    .selectAll("input")
+    .data(headers)
+    .enter()
+    .append("label")
+        .attr("style", "color: white; padding-left: 20px;")
+        .attr("for",function(d){ return d; })
+        .text(function(d) { return d; })
+    .append("input")
+        .attr("checked", true)
+        .attr("type", "checkbox")
+        .attr("id", function(d,i) { return d; })
+        .on("click", function(d, i){
+            selectFeature(d);
+    });
+}
+
+function selectFeature(fieldName) {
+    storeApp.dispatch(parallelFiltersActions.toggleParallelFilter(fieldName));
+}
+
 function renderParallelSet(selector, schools){
     d3v3.select(selector).select("svg").remove();
 
     var svg = d3v3.select(selector).append("svg")
-      .attr("width", chart.width())
+      .attr("style", "background-color: #f5f5f5")
+      .attr("width", width)
       .attr("height", chart.height());
-
-    // d3.select(selector).select("svg").remove();
-    //
-    // var vis = d3.select("#content").append("svg")
-    //   .attr("width", chart.width())
-    //   .attr("height", chart.height());
 
     var filteredCategories = getFilteredCategories();
 
     chart.dimensions(filteredCategories);
+    chart.width(width);
 
     const chartData = schools.reduce((list, school) => {
         list.push({
-            Agua: extractAgua(school),
-            Energia: extractEnergia(school),
-            Lixo: extractLixo(school),
-            Esgoto: extractEsgoto(school),
+            Merenda : extractMerenda(school),
+            Internet : extractInternet(school),
+            Energia : extractEnergia(school),
+            Esgoto : extractEsgoto(school),
+            Agua : extractAgua(school),
+            Lixo : extractLixo(school),
+            Funcionarios : extractFuncionarios(school),
         });
 
         return list;
     }, []);
 
-    console.log(chartData);
-
     svg.datum(chartData).call(chart);
-
-    // d3.json('./escolas2015.json', (schools) => {
-    //     var entries = schools.entries;
-    //
-    //     var dataset = [];
-    //     Object.keys(entries).forEach((id) => {
-    //         var entry = entries[id];
-    //         var element = {
-    //             Merenda : extractMerenda(entry.alimentacao_escolar),
-    //             Internet : extractInternet(entry.acesso_internet),
-    //             Energia : extractEnergia(entry.energia),
-    //             Esgoto : extractEsgoto(entry.esgoto),
-    //             Agua : extractAgua(entry.agua),
-    //             Lixo : extractLixo(entry.lixo),
-    //             Funcionarios : extractFuncionarios(entry.total_funcionarios)
-    //         };
-    //         dataset.push(element);
-    //     });
-    //
-    //     vis.datum(dataset).call(chart);
-    // });
 }
 
 function getFilteredCategories(){
-    return ['Agua', 'Lixo', 'Esgoto', 'Energia'];
+    const {parallelFilters} = storeApp.getState();
+    if (parallelFilters.size < 1){
+        return headers;
+    } else {
+        var filteredList = [];
+        for (var i = 0; i < headers.length; i++) {
+            var fieldName = headers[i];
+            if(!parallelFilters.contains(fieldName))
+                filteredList.push(fieldName);
+        }
+        console.log(filteredList);
+        return filteredList;
+    }
+}
+
+function extractMerenda(school) {
+    const value = school.get('alimentacao_escolar');
+    if (value != 1)
+        return "Não possui"
+    else
+        return "Possui"
+}
+
+function extractFuncionarios(school) {
+    const value = school.get('total_funcionarios');
+    if (value < 25)
+        return "Até 25";
+    else if (value < 50)
+        return "Até 50";
+    else if (value < 75)
+        return "Até 75";
+    else if (value < 100)
+        return "Até 100";
+    else
+        return "Mais que 100";
+}
+
+function extractInternet(school) {
+    const value = school.get('acesso_internet');
+    if(value != 1)
+        return "Sem internet";
+    else
+        return "Com internet";
 }
 
 function extractEnergia(school) {
@@ -92,7 +139,6 @@ function extractEnergia(school) {
 
 function extractAgua(school) {
     const value = school.get('_agua');
-
     if (value.get('inexistente'))
         return "Inexistente";
     else if (value.get('rede_publica'))
