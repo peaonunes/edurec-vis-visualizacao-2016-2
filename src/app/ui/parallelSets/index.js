@@ -166,7 +166,7 @@ function extractSewer(school) {
         return "Outros";
 }
 
-function extractTrashLixo(school) {
+function extractTrash(school) {
     const value = school.get('_lixo');
 
     if (value.get('recicla'))
