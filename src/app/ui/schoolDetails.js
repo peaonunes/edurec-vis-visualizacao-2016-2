@@ -12,7 +12,7 @@ export function showSchoolDetails(store) {
 }
 
 function renderSchoolDetails(school) {
-  var schoolDetails = d3.select("#schoolDetails");
+  var schoolDetails = d3.select("#mapDetails");
 
   schoolDetails.selectAll("*").remove();
 
@@ -30,6 +30,10 @@ function moreDetails(school){
   const nome = school.get('nome');
   const endereco = school.getIn([ 'endereco', 'address' ]);
   const email = school.get('email');
+  const quantidade_salas_existentes = school.get('quantidade_salas_existentes');
+  const comp_alunos = school.get('equipamentos_comp_alunos');
+  const acesso_internet = (school.get('acesso_internet') == true ? 'Possui' : 'Não possui');
+  const total_funcionarios = school.get('total_funcionarios'); 
 
   const layout =
 `<div>
@@ -38,8 +42,12 @@ function moreDetails(school){
   </div>
   <div>
     <h5>${nome}</h5>
-    <p>${endereco}</p>
-    <p>${email}</p>
+    <p><strong>Endereço: </strong>${endereco}</p>
+    <p><strong>Contato: </strong>${email}</p>
+    <p>Quantidade de salas existentes: ${quantidade_salas_existentes || '0'}</p>
+    <p>Quantida de computadores para alunos: ${comp_alunos | '0'}</p>
+    <p>${acesso_internet} acesso a internet</p>
+    <p>Quantidade de funcionários: ${total_funcionarios | '0'}</p>
   </div>
 </div>`;
 
@@ -47,7 +55,7 @@ function moreDetails(school){
 }
 
 function renderStudentsDetails(students) {
-  var schoolDetails = d3.select("#schoolDetails");
+  var schoolDetails = d3.select("#mapDetails");
 
   var width = 300;
   var height = 200;
@@ -82,11 +90,13 @@ function renderStudentsDetails(students) {
   }
 
   var data = [];
+  var keys = [];
 
   Object.keys(studentTypeQt).forEach((key) => {
     data.push(studentTypeQt[key]);
+    keys.push(key);
   });
-  
+
   //piechat
   var colorScale = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"];
 
@@ -102,5 +112,8 @@ function renderStudentsDetails(students) {
   .attr("fill", function(d,i) {
     return colorScale[i];
   })
-  .attr("transform", "translate(" + width/2 + "," + height/2 + ")");
+  .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
+  .on('mouseover', function(d, i) {
+    //console.log(keys[i]);
+  });
 }
