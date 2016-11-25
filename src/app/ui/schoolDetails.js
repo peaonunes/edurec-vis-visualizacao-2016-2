@@ -101,7 +101,7 @@ function renderStudentsDetails(students) {
   //piechat
   var colorScale = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"];
 
-  var arc = d3.arc().innerRadius(0).outerRadius(70);
+  var arc = d3.arc().innerRadius(0).outerRadius(90);
 
   var pie = d3.pie().value(function(d) {return d;});
 
