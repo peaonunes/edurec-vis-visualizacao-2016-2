@@ -1,0 +1,15 @@
+$mapToScreenRatio: 60%;
+
+.map-row {
+  & > * {
+    margin: 0 !important;
+  }
+}
+
+#map {
+  flex: 0 0 $mapToScreenRatio;
+}
+
+#mapDetails {
+  flex: 0 0 (100% - $mapToScreenRatio);
+}

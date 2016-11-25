@@ -20,19 +20,25 @@
   "homepage": "https://github.com/peaonunes/edurec-vis-visualizacao-2016-2#readme",
   "devDependencies": {
     "@google/maps": "^0.3.0",
+    "autoprefixer": "^6.5.3",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.16.0",
+    "css-loader": "^0.25.0",
     "node-fetch": "^1.6.3",
+    "node-sass": "^3.13.0",
+    "postcss-loader": "^1.1.1",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
     "d3": "^4.2.7",
     "immutable": "^3.8.1",
+    "leaflet": "^1.0.1",
     "redux": "^3.6.0",
     "reselect": "^2.5.4",
-    "source-map-loader": "^0.1.5",
-    "leaflet":"^1.0.1"
+    "source-map-loader": "^0.1.5"
   }
 }
