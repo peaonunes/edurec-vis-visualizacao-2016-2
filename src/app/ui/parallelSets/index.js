@@ -76,6 +76,32 @@ function renderParallelSet(selector, schools){
     }, []);
 
     svg.datum(chartData).call(chart);
+
+    svg.selectAll("path")
+        .on("click", function(d) {
+            changeViewsBasedOn(d);
+    });
+}
+
+function changeViewsBasedOn(root) {
+    var selectedDimensions = [];
+    getSelectedDimensions(root, selectedDimensions);
+    dispatchFiltersToViews(selectedDimensions);
+}
+
+function getSelectedDimensions(path, dimensions) {
+    if (path != null && path.name != null){
+        dimensions.push({
+            dimension : path.dimension,
+            value : path.name
+        })
+        getSelectedDimensions(path.parent, dimensions);
+    }
+}
+
+function dispatchFiltersToViews(selectedDimensions) {
+    // TODO: Create the filter and update the state.
+    console.log(selectedDimensions);
 }
 
 function getFilteredCategories(){
