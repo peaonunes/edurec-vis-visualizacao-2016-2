@@ -10,9 +10,12 @@ let rankScale = ["#c7e9c0","#a1d99b","#74c476",'#31a354',"#006d2c"];
 
 export function renderMap(store) {
   function innerRender() {
-    const schools = schoolsSelector(store.getState());
+    const state = store.getState();
 
-    renderMarkers(store, schools);
+    const schools = schoolsSelector(state);
+    const colouringCriteria = state.colorFilter;
+
+    renderMarkers(store, schools, colouringCriteria);
   }
 
   setupMap();
@@ -49,7 +52,7 @@ function setupMap(){
   }).addTo(map);
 }
 
-function renderMarkers(store, schools) {
+function renderMarkers(store, schools, colouringCriteria) {
   clearMapMarkers(schools);
 
   schools.keySeq().forEach((schoolId) => {
@@ -62,11 +65,11 @@ function renderMarkers(store, schools) {
     if (!markers[schoolId]) {
       var marker = leaflet
         .circleMarker([lat, lng], {
-          color: '#black',
-          weight: 3,
-          fillColor: getColor("default"),
-          fillOpacity: 0.5,
-          radius: 10,
+          color: 'white',
+          weight: 0.5,
+          fillColor: getColor(colouringCriteria, school),
+          fillOpacity: 0.75,
+          radius: 7.5,
           dataID: schoolId
         })
         .addTo(map);
@@ -78,14 +81,22 @@ function renderMarkers(store, schools) {
         store.dispatch(schoolSelectionActions.selectSchool(schools.get(d.target.options.dataID)));
       });
     } else {
-      map.addLayer(markers[schoolId]);
+      markers[schoolId]
+        .setStyle({
+          fillColor: getColor(colouringCriteria, school),
+        })
+        .bringToFront();
     }
   });
 }
 
 function clearMapMarkers(){
   Object.keys(markers).forEach((markerId) => {
-    map.removeLayer(markers[markerId]);
+    markers[markerId]
+      .setStyle({
+        fillColor: '#bdbdbd',
+      })
+      .bringToBack();
   });
 }
 
@@ -102,12 +113,13 @@ function getColor(type, school) {
         else if (type === "tipo")
             return extractType(school);
         else if (type === "nota")
-            return extracRank(school);
+            return extractRank(school);
     }
 }
 
 function extractRank(school) {
-    const value = school.get("rank");
+    const rank = school.get("rank");
+
     if (rank < 25)
         return rankScale[0];
     else if (rank >= 25 && rank < 50)
