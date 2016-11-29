@@ -118,7 +118,7 @@ function renderStudentsDetails(students) {
   .attr("fill", function(d,i) {
     return colorScale[i];
   })
-  .attr("transform", "translate(" + 130 + "," + height/2 + ")");
+  .attr("transform", "translate(" + 110 + "," + height/2 + ")");
 
   for(var i = 0; i < keys.length; i++) {
   //Object.keys(studentTypeQt).forEach((key) => {
@@ -127,7 +127,7 @@ function renderStudentsDetails(students) {
     .attr("y", 0)
     .attr("width", 10)
     .attr("height", 10)
-    .attr("transform", "translate(" + 250 + ", " + (height - ((i+1)*20)) + ")")
+    .attr("transform", "translate(" + 215 + ", " + (height - ((i+1)*20)) + ")")
     .attr("fill", colorScale[i]);
 
     schoolDetails.select("svg").append("text")
@@ -135,10 +135,10 @@ function renderStudentsDetails(students) {
     .attr("y", 0)
     .text(function(d) {
       if(situations.hasOwnProperty(keys[i]))
-        return situations[keys[i]];
+        return situations[keys[i]] + " - " + studentTypeQt[keys[i]];
       else
         return keys[i];
     })
-    .attr("transform", "translate(" + 265 + ", " + ((i+1)*20) + ")");
+    .attr("transform", "translate(" + 230 + ", " + ((i+1)*20) + ")");
   };
 }
