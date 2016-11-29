@@ -36,12 +36,16 @@ export default function schoolsReducer(schools = Map(), action) {
               .get('students', List())
               .push(Immutable.fromJS(student));
 
-          const approvedStudents = mutableSchoolMap.get('approvedStudents', 0);
+          let approvedStudents = mutableSchoolMap.get('approvedStudents', 0);
+
+          if (student.situacao === 'AP') {
+            approvedStudents += 1;
+          }
 
           mutableSchoolMap
             .set('students', studentsList)
-            .set('approvedStudents', approvedStudents + 1)
-            .set('rank', ((approvedStudents / studentsList.size) * 100).toFixed(2));
+            .set('approvedStudents', approvedStudents)
+            .set('rank', ((approvedStudents / studentsList.size) * 10).toFixed(2));
         });
       });
     default:
