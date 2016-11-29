@@ -39,8 +39,8 @@ function moreDetails(school){
 
   const layout =
 `<div>
-  <div>
-    <h5>${rank || 'Sem nota'}</h5>
+  <div title="Quantidade de Alunos Aprovados / Quantidade de Alunos">
+    <h5>Nota da escola: ${rank || 'Sem nota'}</h5>
   </div>
   <div>
     <h5>${nome}</h5>
