@@ -1,5 +1,6 @@
 import { actionCreators as schoolFilterActions } from '../state/actions/schoolFilters';
 import { actionCreators as studentFilterActions } from '../state/actions/studentFilters';
+import { actionCreators as colorFilterActions } from '../state/actions/colorFilter';
 
 var d3 = require('d3');
 
@@ -31,6 +32,11 @@ export function setupDropdownElements() {
 }
 
 export function setupFilterCheckboxes(store) {
+  d3.selectAll('.color-filter')
+    .on('change', function() {
+      store.dispatch(colorFilterActions.setColorFilter(this.value));
+    });
+
   d3.selectAll('.school-filter')
     .on('change', function() {
       store.dispatch(schoolFilterActions.toggleSchoolFilter(this.value));
