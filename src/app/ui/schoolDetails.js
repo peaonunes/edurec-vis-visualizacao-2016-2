@@ -14,6 +14,8 @@ export function showSchoolDetails(store) {
 function renderSchoolDetails(school) {
   var schoolDetails = d3.select("#mapDetails");
 
+  schoolDetails.style("border", "1px solid black");
+
   schoolDetails.selectAll("*").remove();
 
   schoolDetails.append("div").html(moreDetails(school));

@@ -23,6 +23,8 @@ function setupMap(){
   const mapContainer = d3.select("#map");
   const {width, height} = mapContainer.node().getBoundingClientRect();
 
+  mapContainer.style("border", "1px solid black");
+
   const mapGroup = mapContainer
     .selectAll('#map-content')
     .data([null]);
