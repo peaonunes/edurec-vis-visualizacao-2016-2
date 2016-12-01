@@ -1,9 +1,7 @@
 $filterBarBackground: #333;
 
 #filterBar {
-  background-color: $filterBarBackground;
-  color: white;
-  font-family: sans-serif;
+  padding: 0;
   width: 100%;
   z-index: 9999;
 
