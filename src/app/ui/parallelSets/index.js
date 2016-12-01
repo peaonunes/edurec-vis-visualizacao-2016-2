@@ -9,7 +9,6 @@ setupParsetFunction(d3v3);
 let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
 let chart = d3v3.parsets();
 let storeApp;
-let width = screen.width*0.6;
 
 export function renderParallelSetsChart(store){
     storeApp = store;
@@ -22,17 +21,16 @@ export function renderParallelSetsChart(store){
 
     innerRender();
     store.subscribe(innerRender);
+    d3.select(window).on('resize', innerRender);
 }
 
 function renderOptions(selector) {
     var options = d3.select(selector);
     options
-    .attr("style", "width: "+width+"px; height: 30px; border-left-style: solid; background-color: #616161; padding-top:10px")
     .selectAll("input")
     .data(headers)
     .enter()
     .append("label")
-        .attr("style", "color: white; padding-left: 20px;")
         .attr("for",function(d){ return d; })
         .text(function(d) { return d; })
     .append("input")
@@ -49,9 +47,13 @@ function selectFeature(fieldName) {
 }
 
 function renderParallelSet(selector, schools){
-    d3v3.select(selector).select("svg").remove();
+    const chartContainer = d3v3.select(selector);
 
-    var svg = d3v3.select(selector).append("svg")
+    const width = chartContainer.node().getBoundingClientRect().width;
+
+    chartContainer.select("svg").remove();
+
+    var svg = chartContainer.append("svg")
       .attr("style", "background-color: #f5f5f5")
       .attr("width", width)
       .attr("height", chart.height());

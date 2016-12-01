@@ -41,10 +41,27 @@ body {
   left: 0;
 }
 
-#content {
+#content, .left-column, .right-column {
   height: 100%;
+}
+
+$leftColumnViewportRatio: 60%;
+
+.left-column {
+  width: $leftColumnViewportRatio;
+}
+
+.right-column {
+  width: 100% - $leftColumnViewportRatio;
 }
 
 .app-section {
   height: 90%;
+}
+
+.toolbar {
+  background-color: $filterBarBackground;
+  color: white;
+  font-family: sans-serif;
+  padding: 1rem;
 }
