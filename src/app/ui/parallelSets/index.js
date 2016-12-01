@@ -1,5 +1,6 @@
 import './d3.parsets.scss';
 import { actionCreators as parallelFiltersActions } from '../../state/actions/parallelFilters';
+import { actionCreators as parallelSelectActions } from '../../state/actions/parallelSelect';
 
 const d3v3 = require('./d3v3');
 const setupParsetFunction = require('./d3.parsets');
@@ -102,6 +103,7 @@ function getSelectedDimensions(path, dimensions) {
 function dispatchFiltersToViews(selectedDimensions) {
     // TODO: Create the filter and update the state.
     console.log(selectedDimensions);
+    storeApp.dispatch(parallelSelectActions.selectParallel(selectedDimensions));
 }
 
 function getFilteredCategories(){
@@ -115,7 +117,6 @@ function getFilteredCategories(){
             if(!parallelFilters.contains(fieldName))
                 filteredList.push(fieldName);
         }
-        console.log(filteredList);
         return filteredList;
     }
 }
