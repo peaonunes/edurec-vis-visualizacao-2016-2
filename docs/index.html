@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
 </head>
 <body>
-  <div id="filterBar" class="row stretch fixed">
+  <div id="filterBar" class="row stretch toolbar fixed">
     <h1>EDUREC</h1>
     <div class="row stretch">
       <ul class="row stretch dropdown-list">
@@ -64,18 +64,15 @@
 
   <div id="topbar-padding"></div>
   <div id="content">
-    <div class="app-section row stretch map-row">
-      <div id="map"></div>
-      <div id="mapDetails" style="padding: 1%"></div>
-    </div>
-    <div class="app-section overview-row">
-      <h1>Visão geral</h1>
-      <div id="parallelSets">
-          <div id="options" style="height: 30px; border-left-style: solid; background-color: #616161; padding-top:10px"></div>
-          <div id="parallel"></div>
+    <div class="left-column">
+      <div class="app-section" id="map"></div>
+      <div class="app-section" id="parallelSets">
+        <div class="row toolbar" id="options"></div>
+        <div id="parallel"></div>
       </div>
     </div>
-    <div id="mapDetails">
+    <div class="right-column">
+      <div id="mapDetails"></div>
     </div>
   </div>
   <script src="bundle.js"></script>
