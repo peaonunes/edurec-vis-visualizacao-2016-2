@@ -159,6 +159,9 @@ function renderPieChart(students) {
 }
 
 function renderIdeb(school) {
+  if(!school.has("ideb"))
+    return;
+
   var schoolDetails = d3.select("#mapDetails");
 
   var width = 400;
@@ -181,10 +184,10 @@ function renderIdeb(school) {
   .style("stroke-width", 1)
   .style("fill", "none");
 
-  var ideb = 4.2;// school.get("ideb");
-  var idebCidade = 3.5; //school.get("idebCidade");
+  var ideb = school.get("ideb");
+  var idebCidade = school.get("idebCidade");
 
-  var maxIdebValue = 5;
+  var maxIdebValue = 10;
 
   var yScale = d3.scaleLinear().range([0,150]).domain([0, maxIdebValue]);
 
@@ -239,7 +242,7 @@ function renderIdeb(school) {
   .attr("x", 0)
   .attr("y", 0)
   .attr("transform", "translate(" + (originX - labelLine*1.5) + "," + (height - originY - yScale(ideb) + 5) + ")")
-  .text(ideb);
+  .text(ideb.toFixed(1));
 
   //appending city ideb
   g.append("rect")
@@ -266,7 +269,7 @@ function renderIdeb(school) {
   .attr("x", 0)
   .attr("y", 0)
   .attr("transform", "translate(" + (originX - labelLine*1.5) + "," + (height - originY - yScale(idebCidade) + 5) + ")")
-  .text(idebCidade);
+  .text(idebCidade.toFixed(1));
 
   //append school name and city under
   svg.append("text")
