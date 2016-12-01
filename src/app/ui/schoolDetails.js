@@ -14,6 +14,8 @@ export function showSchoolDetails(store) {
 function renderSchoolDetails(school) {
   var schoolDetails = d3.select("#mapDetails");
 
+  schoolDetails.style("background-color", "#f5f5f5")
+
   schoolDetails.selectAll("*").remove();
 
   schoolDetails.append("div").html(moreDetails(school));
@@ -38,7 +40,7 @@ function moreDetails(school){
   const total_funcionarios = school.get('total_funcionarios');
 
   const layout =
-`<div>
+`<div style="font-family: sans-serif">
   <div title="Quantidade de Alunos Aprovados / Quantidade de Alunos">
     <h5>Nota da escola: ${rank || 'Sem nota'}</h5>
   </div>
@@ -67,15 +69,21 @@ function renderPieChart(students) {
     .attr("width", width)
     .attr("height", height);
 
+  svg.style("background-color", "#fafafa");
+  svg.style("margin", "auto");
+  svg.style("display", "block");
+
   var g = svg.append("g")
     .attr("transform", "translate(0," + height + ") scale(1,-1)");
+
+  schoolDetails.append("br");
 
   g.append("rect")
   .attr("x", 0)
   .attr("y", 0)
   .attr("width", width)
   .attr("height", height)
-  .style("stroke", "black")
+  .style("stroke", "#e0e0e0")
   .style("stroke-width", 1)
   .style("fill", "none");
 
@@ -172,6 +180,10 @@ function renderIdeb(school) {
     .attr("width", width)
     .attr("height", height);
 
+  svg.style("background-color", "#fafafa");
+  svg.style("margin", "auto");
+  svg.style("display", "block");
+
   var g = svg.append("g")
     .attr("transform", "translate(0," + height + ") scale(1,-1)");
 
@@ -180,7 +192,7 @@ function renderIdeb(school) {
   .attr("y", 0)
   .attr("width", width)
   .attr("height", height)
-  .style("stroke", "black")
+  .style("stroke", "#e0e0e0")
   .style("stroke-width", 1)
   .style("fill", "none");
 
