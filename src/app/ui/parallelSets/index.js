@@ -9,7 +9,6 @@ setupParsetFunction(d3v3);
 let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
 let chart = d3v3.parsets();
 let storeApp;
-let width = screen.width*0.6;
 
 export function renderParallelSetsChart(store){
     storeApp = store;
@@ -22,17 +21,16 @@ export function renderParallelSetsChart(store){
 
     innerRender();
     store.subscribe(innerRender);
+    d3.select(window).on('resize', innerRender);
 }
 
 function renderOptions(selector) {
     var options = d3.select(selector);
     options
-    .attr("style", "width: "+width+"px; height: 30px; border-left-style: solid; background-color: #616161; padding-top:10px")
     .selectAll("input")
     .data(headers)
     .enter()
     .append("label")
-        .attr("style", "color: white; padding-left: 20px;")
         .attr("for",function(d){ return d; })
         .text(function(d) { return d; })
     .append("input")
@@ -49,9 +47,13 @@ function selectFeature(fieldName) {
 }
 
 function renderParallelSet(selector, schools){
-    d3v3.select(selector).select("svg").remove();
+    const chartContainer = d3v3.select(selector);
 
-    var svg = d3v3.select(selector).append("svg")
+    const width = chartContainer.node().getBoundingClientRect().width;
+
+    chartContainer.select("svg").remove();
+
+    var svg = chartContainer.append("svg")
       .attr("style", "background-color: #f5f5f5")
       .attr("width", width)
       .attr("height", chart.height());
@@ -63,13 +65,13 @@ function renderParallelSet(selector, schools){
 
     const chartData = schools.reduce((list, school) => {
         list.push({
-            Merenda : extractMerenda(school),
+            Merenda : extractFood(school),
             Internet : extractInternet(school),
-            Energia : extractEnergia(school),
-            Esgoto : extractEsgoto(school),
-            Agua : extractAgua(school),
-            Lixo : extractLixo(school),
-            Funcionarios : extractFuncionarios(school),
+            Energia : extractEnergy(school),
+            Esgoto : extractSewer(school),
+            Agua : extractWater(school),
+            Lixo : extractTrash(school),
+            Funcionarios : extractEmpolyees(school),
         });
 
         return list;
@@ -94,7 +96,7 @@ function getFilteredCategories(){
     }
 }
 
-function extractMerenda(school) {
+function extractFood(school) {
     const value = school.get('alimentacao_escolar');
     if (value != 1)
         return "Não possui"
@@ -102,7 +104,7 @@ function extractMerenda(school) {
         return "Possui"
 }
 
-function extractFuncionarios(school) {
+function extractEmpolyees(school) {
     const value = school.get('total_funcionarios');
     if (value < 25)
         return "Até 25";
@@ -124,7 +126,7 @@ function extractInternet(school) {
         return "Com internet";
 }
 
-function extractEnergia(school) {
+function extractEnergy(school) {
     const value = school.get('_energia');
 
     if (value.get('inexistente'))
@@ -137,7 +139,7 @@ function extractEnergia(school) {
         return "Outros";
 }
 
-function extractAgua(school) {
+function extractWater(school) {
     const value = school.get('_agua');
     if (value.get('inexistente'))
         return "Inexistente";
@@ -153,7 +155,7 @@ function extractAgua(school) {
         return "Outros";
 }
 
-function extractEsgoto(school) {
+function extractSewer(school) {
     const value = school.get('_esgoto');
 
     if (value.get('inexistente'))
@@ -166,7 +168,7 @@ function extractEsgoto(school) {
         return "Outros";
 }
 
-function extractLixo(school) {
+function extractTrash(school) {
     const value = school.get('_lixo');
 
     if (value.get('recicla'))

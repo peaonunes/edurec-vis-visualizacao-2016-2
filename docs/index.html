@@ -9,24 +9,10 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
 </head>
 <body>
-  <div id="filterBar" class="row stretch fixed">
+  <div id="filterBar" class="row stretch toolbar fixed">
     <h1>EDUREC</h1>
     <div class="row stretch">
       <ul class="row stretch dropdown-list">
-        <li class="dropdown" data-dropdown="dropdownNota">
-          <span class="dropdown-label">Nota</span>
-          <div class="dropdown-content" id="dropdownNota">
-            <input type="checkbox" value="0-3" class="filter-checkbox" checked>0-3</input>
-            <br/>
-            <input type="checkbox" value="3-5" class="filter-checkbox" checked>3-5</input>
-            <br/>
-            <input type="checkbox" value="5-7" class="filter-checkbox" checked>5-7</input>
-            <br/>
-            <input type="checkbox" value="7-9" class="filter-checkbox" checked>7-9</input>
-            <br/>
-            <input type="checkbox" value="9-10" class="filter-checkbox" checked>9-10</input>
-          </div>
-        </li>
         <li class="dropdown" data-dropdown="dropdownDependencias">
           <span class="dropdown-label">Dependências</span>
           <div class="dropdown-content" id="dropdownDependencias">
@@ -40,11 +26,13 @@
         <li class="dropdown" data-dropdown="dropdownServicos">
           <span class="dropdown-label">Serviços básicos</span>
           <div class="dropdown-content" id="dropdownServicos">
-            <input type="checkbox" value="agua" class="filter-checkbox school-filter">Água</input>
+            <input type="radio" value="nota" class="filter-checkbox color-filter" name="color-filter" checked>Nota</input>
             <br/>
-            <input type="checkbox" value="energia" class="filter-checkbox school-filter">Energia</input>
+            <input type="radio" value="agua" class="filter-checkbox color-filter" name="color-filter">Água</input>
             <br/>
-            <input type="checkbox" value="esgoto" class="filter-checkbox school-filter">Esgoto</input>
+            <input type="radio" value="energia" class="filter-checkbox color-filter" name="color-filter">Energia</input>
+            <br/>
+            <input type="radio" value="esgoto" class="filter-checkbox color-filter" name="color-filter">Esgoto</input>
           </div>
         </li>
       </ul>
@@ -76,18 +64,15 @@
 
   <div id="topbar-padding"></div>
   <div id="content">
-    <div class="app-section row stretch map-row">
-      <div id="map"></div>
-      <div id="mapDetails" style="padding: 1%"></div>
-    </div>
-    <div class="app-section overview-row">
-      <h1>Visão geral</h1>
-      <div id="parallelSets">
-          <div id="options" style="height: 30px; border-left-style: solid; background-color: #616161; padding-top:10px"></div>
-          <div id="parallel"></div>
+    <div class="left-column">
+      <div class="app-section" id="map"></div>
+      <div class="app-section" id="parallelSets">
+        <div class="row toolbar" id="options"></div>
+        <div id="parallel"></div>
       </div>
     </div>
-    <div id="mapDetails">
+    <div class="right-column">
+      <div id="mapDetails"></div>
     </div>
   </div>
   <script src="bundle.js"></script>
