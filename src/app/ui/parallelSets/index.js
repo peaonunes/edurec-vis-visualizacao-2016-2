@@ -7,7 +7,15 @@ const setupParsetFunction = require('./d3.parsets');
 
 setupParsetFunction(d3v3);
 
-let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Merenda", "Funcionarios"];
+let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Funcionarios"];
+let headersToField = {
+    "Internet": "acesso_internet",
+    "Energia" : "_energia",
+    "Esgoto": "_esgoto",
+    "Agua": "_agua",
+    "Lixo": "_lixo",
+    "Funcionarios": "total_funcionarios",
+};
 let chart = d3v3.parsets();
 let storeApp;
 
@@ -66,7 +74,6 @@ function renderParallelSet(selector, schools){
 
     const chartData = schools.reduce((list, school) => {
         list.push({
-            Merenda : extractFood(school),
             Internet : extractInternet(school),
             Energia : extractEnergy(school),
             Esgoto : extractSewer(school),
@@ -105,7 +112,38 @@ function getSelectedDimensions(path, dimensions) {
 function dispatchFiltersToViews(selectedDimensions) {
     // TODO: Create the filter and update the state.
     console.log(selectedDimensions);
+    // converter dimension e value para _dimension.value, acesso internet, Funcionarios pra total_funcionarios
+    // de acordo com o valor de total_funcionarios extrair o range rangeFilterFactory(
+    // createFilter para todo mundo com o fieldpath e arguentos necessarios (caso do total_funcionarios)
+    // criar um novo objeto de fieldpath : retorno do createFilter
+    // dispatch novo objeto
     storeApp.dispatch(parallelSelectActions.selectParallel(selectedDimensions));
+}
+
+function createFilter(fieldPath, ...args) {
+    const rangeFilterFields = ['total_funcionarios'];
+
+    if (rangeFilterFields.indexOf(fieldPath) !== -1) {
+        return rangeFilterFactory(fieldPath, ...args);
+    } else {
+        return booleanFilterFactory(fieldPath);
+    }
+
+    function booleanFilterFactory(fieldPath) {
+        return (school) => {
+            return !!school.getIn(fieldPath.split('.'));
+        };
+    }
+
+    function rangeFilterFactory(fieldPath, upperBound, lowerBound = 0) {
+        return (school) => {
+            const schoolFieldValue = school.getIn(fieldPath.split('.'));
+
+            return schoolFieldValue !== undefined &&
+                schoolFieldValue >= lowerBound &&
+                schoolFieldValue < upperBound;
+        }
+    }
 }
 
 function getFilteredCategories(){

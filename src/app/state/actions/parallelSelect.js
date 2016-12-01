@@ -3,11 +3,11 @@ export const actionTypes = {
 };
 
 export const actionCreators = {
-    selectParallel(selectedHierarchy){
+    selectParallel(selectedHierarchyFilters){
         return {
             type : actionTypes.SELECT_PARALLEL_SET,
             payload : {
-                selectedHierarchy: selectedHierarchy,
+                selectedHierarchyFilters: selectedHierarchyFilters,
             }
         }
     },

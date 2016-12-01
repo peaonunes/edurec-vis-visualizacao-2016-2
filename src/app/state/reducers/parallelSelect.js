@@ -1,17 +1,12 @@
 import { actionTypes } from '../actions/parallelSelect';
 
-import { Map } from 'immutable';
+import { List } from 'immutable';
 
-export default function parallelSelectReducer(parallelSelected = Map(), action) {
+export default function parallelSelectReducer(parallelSelected = List(), action) {
     switch (action.type) {
         case actionTypes.SELECT_PARALLEL_SET:
-            const { selectedHierarchy } = action.payload;
-
-            Object.keys(selectedHierarchy).forEach((key) => {
-                parallelSelected.set(id, selectedHierarchy[id]);
-            });
-
-            return parallelSelected;
+            const { selectedHierarchyFilters } = action.payload;
+            return List(selectedHierarchyFilters);
         default:
             return parallelSelected;
     }
