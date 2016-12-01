@@ -5,12 +5,17 @@ import { actionCreators as schoolSelectionActions } from '../state/actions/schoo
 
 let map;
 let markers = {};
+let qualitativeScale = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc"];
+let rankScale = ["#c7e9c0","#a1d99b","#74c476",'#31a354',"#006d2c"];
 
 export function renderMap(store) {
   function innerRender() {
-    const schools = schoolsSelector(store.getState());
+    const state = store.getState();
 
-    renderMarkers(store, schools);
+    const schools = schoolsSelector(state);
+    const colouringCriteria = state.colorFilter;
+
+    renderMarkers(store, schools, colouringCriteria);
   }
 
   setupMap();
@@ -22,6 +27,8 @@ export function renderMap(store) {
 function setupMap(){
   const mapContainer = d3.select("#map");
   const {width, height} = mapContainer.node().getBoundingClientRect();
+
+  mapContainer.style("border", "1px solid black");
 
   const mapGroup = mapContainer
     .selectAll('#map-content')
@@ -45,7 +52,7 @@ function setupMap(){
   }).addTo(map);
 }
 
-function renderMarkers(store, schools) {
+function renderMarkers(store, schools, colouringCriteria) {
   clearMapMarkers(schools);
 
   schools.keySeq().forEach((schoolId) => {
@@ -58,11 +65,11 @@ function renderMarkers(store, schools) {
     if (!markers[schoolId]) {
       var marker = leaflet
         .circleMarker([lat, lng], {
-          color: '#black',
-          weight: 3,
-          fillColor: '#f03',
-          fillOpacity: 0.5,
-          radius: 10,
+          color: 'white',
+          weight: 0.5,
+          fillColor: getColor(colouringCriteria, school),
+          fillOpacity: 0.75,
+          radius: 7.5,
           dataID: schoolId
         })
         .addTo(map);
@@ -74,13 +81,104 @@ function renderMarkers(store, schools) {
         store.dispatch(schoolSelectionActions.selectSchool(schools.get(d.target.options.dataID)));
       });
     } else {
-      map.addLayer(markers[schoolId]);
+      markers[schoolId]
+        .setStyle({
+          fillColor: getColor(colouringCriteria, school),
+        })
+        .bringToFront();
     }
   });
 }
 
 function clearMapMarkers(){
   Object.keys(markers).forEach((markerId) => {
-    map.removeLayer(markers[markerId]);
+    markers[markerId]
+      .setStyle({
+        fillColor: '#bdbdbd',
+      })
+      .bringToBack();
   });
+}
+
+function getColor(type, school) {
+    if (type === "default" || type == null)
+        return "#f03";
+    else {
+        if (type === "agua")
+            return extractWater(school);
+        else if (type === "energia")
+            return extractEnergy(school);
+        else if (type === "esgoto")
+            return extractSewer(school);
+        else if (type === "tipo")
+            return extractType(school);
+        else if (type === "nota")
+            return extractRank(school);
+    }
+}
+
+function extractRank(school) {
+    const rank = school.get("rank");
+
+    if (rank < 25)
+        return rankScale[0];
+    else if (rank >= 25 && rank < 50)
+        return rankScale[1];
+    else if (rank >= 50 && rank < 75)
+        return rankScale[2];
+    else
+        return rankScale[3];
+}
+
+function extractType(school) {
+    const value = school.get("tipo");
+    const typeScale = {
+        "creche" : qualitativeScale[0],
+        "ef" : qualitativeScale[1],
+        "em" : qualitativeScale[2],
+        "ef&em" : qualitativeScale[3]
+    };
+    return typeScale[value];
+}
+
+function extractEnergy(school) {
+    const value = school.get('_energia');
+
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('gerador'))
+        return qualitativeScale[2];
+    else
+        return qualitativeScale[3];
+}
+
+function extractWater(school) {
+    const value = school.get('_agua');
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('poco_artesiano'))
+        return qualitativeScale[2];
+    else if (value.get('cacimba'))
+        return qualitativeScale[3];
+    else if (value.get('fonte'))
+        return qualitativeScale[4];
+    else
+        return qualitativeScale[5];
+}
+
+function extractSewer(school) {
+    const value = school.get('_esgoto');
+
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('fossa'))
+        return qualitativeScale[2];
+    else
+        return qualitativeScale[3];
 }

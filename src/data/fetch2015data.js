@@ -14,15 +14,23 @@ const schoolsFileNameSuffix = '';
 
 
 const studentEndpoints = {
-  '2015': '/api/action/datastore_search?resource_id=264f0a37-ad1c-4308-9998-4f0bd3c6561f',
+  '2014': {
+    endpoint: '/api/action/datastore_search?resource_id=0a2aec2f-9634-4408-bbb4-37e1f9c74aa1',
+    keysInfoFile: 'studentFields2014.json'
+  },
+  // '2015': {
+  //   endpoint: '/api/action/datastore_search?resource_id=264f0a37-ad1c-4308-9998-4f0bd3c6561f',
+  //   keysInfoFile: 'dataFiles/studentFields.json'
+  // },
 };
 const schoolEndpoints = {
-  '2015': '/api/action/datastore_search?resource_id=bb8b70d4-4204-40d3-bc77-409a1651b8b9',
+  '2014': '/api/action/datastore_search?resource_id=e06c6c2b-9726-4c84-bfcb-aae6abb9faae',
+  // '2015': '/api/action/datastore_search?resource_id=bb8b70d4-4204-40d3-bc77-409a1651b8b9',
 };
 
 
 function fetchStudentsDataForYear(year, callback) {
-  fetchOpenDataEntries(studentEndpoints[year], callback);
+  fetchOpenDataEntries(studentEndpoints[year].endpoint, callback);
 }
 
 function fetchSchoolsDataForYear(year, callback) {
@@ -31,7 +39,6 @@ function fetchSchoolsDataForYear(year, callback) {
 
 Object.keys(studentEndpoints).forEach((year) => {
   fetchStudentsDataForYear(year, (studentsData) => {
-    console.log(`Finished fetching students data for year ${year}`);
     if (typeof schoolEndpoints[year] !== 'string') {
       console.log(`Error: endpoint for schools in year ${year} is unavailable.`);
     } else {
@@ -50,7 +57,11 @@ Object.keys(studentEndpoints).forEach((year) => {
           });
 
           schoolsData.entries = aggregateAndFilterSchoolData(schoolsData.entries);
-          studentsData.entries = aggregateAndFilterStudentsData(studentsData.entries, schoolsData.entries);
+          studentsData.entries = aggregateAndFilterStudentsData(
+            studentsData.entries,
+            schoolsData.entries,
+            path.join(baseFolder, studentEndpoints[year].keysInfoFile)
+          );
 
           saveJSON(studentsData, path.join(baseFolder, `${studentsFileNamePrefix}${year}${studentsFileNameSuffix}.json`),
             () => {
