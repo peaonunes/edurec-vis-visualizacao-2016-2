@@ -42,13 +42,22 @@ function moreDetails(school){
 
   const layout =
 `<div>
-  <div title="Quantidade de Alunos Aprovados / Quantidade de Alunos">
-    <h5>Nota da escola: ${rank || 'Sem nota'}</h5>
-  </div>
   <div>
-    <h5>${nome}</h5>
+    <table style="padding: 10px">
+      <tr style="width: 100%">
+        <td style="text-align: left; width : 80%"><strong>${nome}</strong></td>
+        <td style="text-align: center; width : 20%">
+          <div style="background-color: #fafafa; border: 5px solid #e0e0e0" title="Razão entre a quantidade de alunos aprovados e a quantidade total de alunos da escola">
+            <h1 style="color: #616161; padding: 5px">${rank || 'Sem nota'}</h1>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div style="padding: 10px; font-size: 0.875em;">
     <p><strong>Endereço: </strong>${endereco}</p>
     <p><strong>Contato: </strong>${email}</p>
+    </br>
     <p>Quantidade de salas existentes: ${quantidade_salas_existentes || '0'}</p>
     <p>Quantida de computadores para alunos: ${comp_alunos | '0'}</p>
     <p>${acesso_internet} acesso a internet</p>
@@ -85,7 +94,7 @@ function renderPieChart(students) {
   .attr("width", width)
   .attr("height", height)
   .style("stroke", "#e0e0e0")
-  .style("stroke-width", 1)
+  .style("stroke-width", "5px")
   .style("fill", "none");
 
   var studentTypeQt = {};
@@ -130,9 +139,10 @@ function renderPieChart(students) {
   svg.append("text")
   .attr("x", 0)
   .attr("y", 0)
-  .attr("transform", "translate(75, 30)")
-  .style("font-size", "1.5em")
-  .text("Situação Anual dos Alunos");
+  .attr("transform", "translate(80, 30)")
+  .style("font-size", "1em")
+  .style("fill", "#212121")
+  .text("Situação Anual dos Alunos - 2014");
 
   //append piechart
   selection.enter()
@@ -157,13 +167,15 @@ function renderPieChart(students) {
     schoolDetails.select("svg").append("text")
     .attr("x", 0)
     .attr("y", 0)
+    .attr("transform", "translate(" + 230 + ", " + (height - (i+1)*20) + ")")
     .text(function(d) {
       if(situations.hasOwnProperty(keys[i]))
         return situations[keys[i]] + " - " + studentTypeQt[keys[i]];
       else
         return keys[i] + " - " + studentTypeQt[keys[i]];
     })
-    .attr("transform", "translate(" + 230 + ", " + (height - (i+1)*20) + ")");
+    .style("font-size", "0.875em")
+    .style("fill", "#424242");
   };
 }
 
@@ -188,13 +200,15 @@ function renderIdeb(school) {
   var g = svg.append("g")
     .attr("transform", "translate(0," + height + ") scale(1,-1)");
 
+    schoolDetails.append("br");
+
   g.append("rect")
   .attr("x", 0)
   .attr("y", 0)
   .attr("width", width)
   .attr("height", height)
   .style("stroke", "#e0e0e0")
-  .style("stroke-width", 1)
+  .style("stroke-width", "5px")
   .style("fill", "none");
 
   var ideb = school.get("ideb");
@@ -255,7 +269,8 @@ function renderIdeb(school) {
   .attr("x", 0)
   .attr("y", 0)
   .attr("transform", "translate(" + (originX - labelLine*1.5) + "," + (height - originY - yScale(ideb) + 5) + ")")
-  .text(ideb.toFixed(1));
+  .text(ideb.toFixed(1))
+  .style("fill", "#212121");
 
   //appending city ideb
   g.append("rect")
@@ -274,7 +289,7 @@ function renderIdeb(school) {
   .attr("y1", originY + yScale(idebCidade))
   .attr("x2", originX + scaleLine / 2)
   .attr("y2", originY + yScale(idebCidade))
-  .attr("stroke", "black")
+  .attr("stroke", "#424242")
   .attr("stroke-width", "1px");
 
   //append number mark on scale city
@@ -282,28 +297,34 @@ function renderIdeb(school) {
   .attr("x", 0)
   .attr("y", 0)
   .attr("transform", "translate(" + (originX - labelLine*1.5) + "," + (height - originY - yScale(idebCidade) + 5) + ")")
-  .text(idebCidade.toFixed(1));
+  .text(idebCidade.toFixed(1))
+  .style("fill", "#212121");
 
   //append school name and city under
   svg.append("text")
   .attr("x", 0)
   .attr("y", 0)
-  .attr("transform", "translate(" + (originX + margin) + "," + (height - originY + 15) + ")")
-  .text("Escola");
+  .attr("transform", "translate(" + (originX + margin - 5) + "," + (height - originY + 15) + ")")
+  .text("Escola")
+  .style("fill", "#424242")
+  .style("font-size", "0.875em");
 
   svg.append("text")
   .attr("x", 0)
   .attr("y", 0)
-  .attr("transform", "translate(" + (originX + 2*margin + boxWidth) + "," + (height - originY + 15) + ")")
-  .text("Cidade");
+  .attr("transform", "translate(" + (originX + 2*margin + boxWidth - 30) + "," + (height - originY + 15) + ")")
+  .text("Média do município")
+  .style("fill", "#424242")
+  .style("font-size", "0.875em");
 
   //graph title
   svg.append("text")
   .attr("x", 0)
   .attr("y", 0)
-  .attr("transform", "translate(100, 30)")
-  .style("font-size", "1.5em")
-  .text("Avaliação no IDEB");
+  .attr("transform", "translate(110, 30)")
+  .style("font-size", "1em")
+  .style("fill", "#212121")
+  .text("Avaliação no IDEB - 2013");
 }
 
 function renderStudentsDetails(students) {
