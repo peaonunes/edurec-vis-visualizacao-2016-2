@@ -14,7 +14,8 @@ export function showSchoolDetails(store) {
 function renderSchoolDetails(school) {
   var schoolDetails = d3.select("#mapDetails");
 
-  schoolDetails.style("background-color", "#f5f5f5")
+  schoolDetails.style("background-color", "#f5f5f5");
+  schoolDetails.style("font-family", "sans-serif");
 
   schoolDetails.selectAll("*").remove();
 
@@ -40,7 +41,7 @@ function moreDetails(school){
   const total_funcionarios = school.get('total_funcionarios');
 
   const layout =
-`<div style="font-family: sans-serif">
+`<div>
   <div title="Quantidade de Alunos Aprovados / Quantidade de Alunos">
     <h5>Nota da escola: ${rank || 'Sem nota'}</h5>
   </div>
