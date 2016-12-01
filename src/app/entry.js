@@ -22,12 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadData(callback) {
-  d3.json('./escolas2015.json', (schools) => {
+  d3.json('./escolas2014.json', (schools) => {
     Object.keys(schools.entries).forEach((schoolId) => {
       store.dispatch(schoolActions.addSchool(schools.entries[schoolId]));
     });
 
-    d3.json('./estudantes2015.json', (students) => {
+    d3.json('./estudantes2014.json', (students) => {
       Object.keys(students.entries).forEach((studentId) => {
         const student = students.entries[studentId];
 

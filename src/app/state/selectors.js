@@ -17,7 +17,7 @@ const schoolStudentsSelector = createSelector(
               return aggregateValue &&
                 student.has(field) &&
                 allowedValues.contains(student.get(field))
-            })
+            }, true)
         });
     })
   }
