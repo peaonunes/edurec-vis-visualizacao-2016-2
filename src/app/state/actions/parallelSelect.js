@@ -1,5 +1,6 @@
 export const actionTypes = {
     SELECT_PARALLEL_SET : 'SELECT_PARALLEL_SET',
+    RESET_PARALLEL_SET_SELECTION: 'RESET_PARALLEL_SET_SELECTION',
 };
 
 export const actionCreators = {
@@ -10,5 +11,11 @@ export const actionCreators = {
                 selectedHierarchyFilters: selectedHierarchyFilters,
             }
         }
+    },
+
+    resetParallelSetSelection() {
+        return {
+            type: actionTypes.RESET_PARALLEL_SET_SELECTION,
+        };
     },
 };

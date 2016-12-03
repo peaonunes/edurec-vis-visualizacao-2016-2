@@ -7,6 +7,8 @@ export default function parallelSelectReducer(parallelSelected = List(), action)
         case actionTypes.SELECT_PARALLEL_SET:
             const { selectedHierarchyFilters } = action.payload;
             return List(selectedHierarchyFilters);
+        case actionTypes.RESET_PARALLEL_SET_SELECTION:
+            return List();
         default:
             return parallelSelected;
     }

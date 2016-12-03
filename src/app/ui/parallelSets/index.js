@@ -35,20 +35,31 @@ export function renderParallelSetsChart(store){
 
 function renderOptions(selector) {
     var options = d3.select(selector);
+
     options
-    .selectAll("input")
-    .data(headers)
-    .enter()
-    .append("label")
-        .attr("for",function(d){ return d; })
-        .text(function(d) { return d; })
-    .append("input")
-        .attr("checked", true)
-        .attr("type", "checkbox")
-        .attr("id", function(d,i) { return d; })
-        .on("click", function(d, i){
-            selectFeature(d);
-    });
+        .selectAll("input")
+        .data(headers)
+        .enter()
+        .append("label")
+            .attr("for",function(d){ return d; })
+            .text(function(d) { return d; })
+        .append("input")
+            .attr("checked", true)
+            .attr("type", "checkbox")
+            .attr("id", function(d,i) { return d; })
+            .on("click", function(d, i){
+                selectFeature(d);
+        });
+
+    const resetButton = options.selectAll('button').data([null]);
+
+    resetButton
+      .enter()
+      .append('button')
+      .text('Limpar seleção')
+      .on('click', function() {
+         storeApp.dispatch(parallelSelectActions.resetParallelSetSelection());
+      });
 }
 
 function selectFeature(fieldName) {
