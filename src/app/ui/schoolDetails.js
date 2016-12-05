@@ -1,17 +1,26 @@
 const d3 = require('d3');
+import { schoolStudents as schoolStudentsSelector } from '../state/selectors';
 
 export function showSchoolDetails(store) {
   function render() {
     const selectedSchool = store.getState().selectedSchool;
-    if(selectedSchool)
-      renderSchoolDetails(selectedSchool);
+    const state = store.getState();
+
+    if(selectedSchool) {
+      const schoolStudentsMap = schoolStudentsSelector(state);
+
+      const id = selectedSchool.get("_id");
+      const students = schoolStudentsMap.get(id);
+      
+      renderSchoolDetails(selectedSchool, students);
+    }
   }
 
   render();
   store.subscribe(render);
 }
 
-function renderSchoolDetails(school) {
+function renderSchoolDetails(school, students) {
   var schoolDetails = d3.select("#mapDetails");
 
   schoolDetails.style("background-color", "#f5f5f5");
@@ -21,8 +30,7 @@ function renderSchoolDetails(school) {
 
   schoolDetails.append("div").html(moreDetails(school));
 
-  var students = school.get('students');
-  if(students)
+  if(students.size != 0)
     renderStudentsDetails(students);
 
   renderIdeb(school);
