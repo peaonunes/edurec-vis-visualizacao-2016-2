@@ -20,6 +20,21 @@ export function showSchoolDetails(store) {
   store.subscribe(render);
 }
 
+function calculateGrade(students) {
+  var approved = 0;
+  var total = 0;
+
+  var size = students.size;
+
+  for(var i = 0; i < size; i++) {
+    var student = students.get(i);
+    total++;
+    if(student.get('situacao') === 'AP')
+      approved++;
+  }
+  return (approved / total) * 10;
+}
+
 function renderSchoolDetails(school, students) {
   var schoolDetails = d3.select("#mapDetails");
 
@@ -28,7 +43,12 @@ function renderSchoolDetails(school, students) {
 
   schoolDetails.selectAll("*").remove();
 
-  schoolDetails.append("div").html(moreDetails(school));
+  var newRank = -1;
+
+  if(students.size != 0)
+    newRank = calculateGrade(students);
+
+  schoolDetails.append("div").html(moreDetails(school, newRank));
 
   if(students.size != 0)
     renderStudentsDetails(students);
@@ -38,8 +58,8 @@ function renderSchoolDetails(school, students) {
   schoolDetails.style("border", "1px solid black");
 }
 
-function moreDetails(school){
-  const rank = school.get('rank');
+function moreDetails(school, newRank){
+  var rank = school.get('rank');
   const nome = school.get('nome');
   const endereco = school.getIn([ 'endereco', 'address' ]);
   const email = school.get('email');
@@ -47,6 +67,9 @@ function moreDetails(school){
   const comp_alunos = school.get('equipamentos_comp_alunos');
   const acesso_internet = (school.get('acesso_internet') == true ? 'Possui' : 'Não possui');
   const total_funcionarios = school.get('total_funcionarios');
+  
+  if(rank)
+    rank = newRank.toFixed(2);
 
   const layout =
 `<div>
@@ -56,7 +79,7 @@ function moreDetails(school){
         <td style="text-align: left; width : 80%"><strong>${nome}</strong></td>
         <td style="text-align: center; width : 20%">
           <div style="background-color: #fafafa; border: 2px solid #e0e0e0" title="Razão entre a quantidade de alunos aprovados e a quantidade total de alunos da escola">
-            <h1 style="color: #616161; padding: 5px">${rank || 'Sem nota'}</h1>
+            <h1 style="color: #616161; padding: 5px;">${rank || '-'}</h1>
           </div>
         </td>
       </tr>
