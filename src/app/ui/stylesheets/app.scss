@@ -45,6 +45,11 @@ body {
   height: 100%;
 }
 
+#content {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
 $leftColumnViewportRatio: 60%;
 
 .left-column {
