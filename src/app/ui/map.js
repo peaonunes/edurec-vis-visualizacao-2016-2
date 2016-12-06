@@ -99,7 +99,7 @@ function renderLabel(colouringCriteria) {
           var item = legend[i];
           var label = item.key;
           var color = item.color;
-          div.innerHTML += '<div> <i style="background:' + color + '"></i> <span>' + label +'</span> </div>' + '<br>';
+          div.innerHTML += '<div> <i style="background:' + color + '"></i> <span>' + label +'</span> </div>';
         }
 
         return div;

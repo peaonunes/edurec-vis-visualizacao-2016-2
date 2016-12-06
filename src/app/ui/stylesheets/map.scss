@@ -26,12 +26,16 @@ $mapToScreenRatio: 60%;
     opacity: 0.7;
 }
 
-.legend span {
-    padding-top: 10px !important;
+.legend div {
+    padding: 1px !important;
+    margin: 0px !important;
+    height: 20px !important;
+    display:table;
 }
 
-.legend div {
-    height: 20px !important;
+.legend div > span {
+    display:table-cell;
+    vertical-align:middle;
 }
 
 .info {
