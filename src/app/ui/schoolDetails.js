@@ -90,7 +90,7 @@ function moreDetails(school, newRank, students){
     <p><strong>Contato: </strong>${email}</p>
     </br>
     <p>Quantidade de salas existentes: ${quantidade_salas_existentes || '0'}</p>
-    <p>Quantida de computadores para alunos: ${comp_alunos | '0'}</p>
+    <p>Quantidade de computadores para alunos: ${comp_alunos | '0'}</p>
     <p>${acesso_internet} acesso a internet</p>
     <p>Quantidade de funcionários: ${total_funcionarios | '0'}</p>
     <p>Quantidade de alunos: ${students}</p>

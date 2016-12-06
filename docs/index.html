@@ -12,7 +12,7 @@
   <div id="filterBar" class="row stretch toolbar fixed">
     <h1>EDUREC</h1>
     <div id="divFaqs" class="row strech">
-      <a id="faqs" href="#">FAQs</a>
+      <a id="faqs" href="#footer-wrapper">FAQs</a>
     </div>
   </div>
 
@@ -21,6 +21,18 @@
     <div class="left-column">
       <div class="row strech lightcolor">
         <ul class="row stretch dropdown-list">
+          <li class="dropdown" data-dropdown="dropdownServicos">
+            <span class="dropdown-label">Colorir por</span>
+            <div class="dropdown-content" id="dropdownServicos">
+              <input type="radio" value="nota" class="filter-checkbox color-filter" name="color-filter" checked>Nota</input>
+              <br/>
+              <input type="radio" value="agua" class="filter-checkbox color-filter" name="color-filter">Água</input>
+              <br/>
+              <input type="radio" value="energia" class="filter-checkbox color-filter" name="color-filter">Energia</input>
+              <br/>
+              <input type="radio" value="esgoto" class="filter-checkbox color-filter" name="color-filter">Esgoto</input>
+            </div>
+          </li>
           <li class="dropdown" data-dropdown="dropdownDependencias">
             <span class="dropdown-label">Dependências</span>
             <div class="dropdown-content" id="dropdownDependencias">
@@ -35,18 +47,6 @@
               <input type="checkbox" value="dependencias.laboratorio_ciencias" class="filter-checkbox school-filter">Laboratório de ciências</input>
               <br/>
               <input type="checkbox" value="dependencias.parque_infantil" class="filter-checkbox school-filter">Parque infantil</input>
-            </div>
-          </li>
-          <li class="dropdown" data-dropdown="dropdownServicos">
-            <span class="dropdown-label">Serviços básicos</span>
-            <div class="dropdown-content" id="dropdownServicos">
-              <input type="radio" value="nota" class="filter-checkbox color-filter" name="color-filter" checked>Nota</input>
-              <br/>
-              <input type="radio" value="agua" class="filter-checkbox color-filter" name="color-filter">Água</input>
-              <br/>
-              <input type="radio" value="energia" class="filter-checkbox color-filter" name="color-filter">Energia</input>
-              <br/>
-              <input type="radio" value="esgoto" class="filter-checkbox color-filter" name="color-filter">Esgoto</input>
             </div>
           </li>
         </ul>
