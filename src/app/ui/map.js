@@ -1,15 +1,53 @@
 const leaflet = require('leaflet');
 const d3 = require('d3');
 import { schools as schoolsSelector } from '../state/selectors';
+import { actionCreators as schoolSelectionActions } from '../state/actions/schoolSelection';
 
 let map;
 let markers = {};
+let qualitativeScale = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33"];
+let rankScale = ["#d7191c","#fdae61",'#a6d96a',"#1a9641"];
+let aguaLegend = [
+    {key: "Inexistente", color: qualitativeScale[0]},
+    {key: "Rede pública" , color: qualitativeScale[1]},
+    {key: "Poço artesiano" , color: qualitativeScale[2]},
+    {key: "Cacimba" , color: qualitativeScale[3]},
+    {key: "Fonte" , color: qualitativeScale[4]},
+    {key: "Outros" , color: qualitativeScale[5]}
+    ];
+let energiaLegend = [
+    {key: "Inexistente", color: qualitativeScale[0]},
+    {key: "Rede pública" , color: qualitativeScale[1]},
+    {key: "Gerador" , color: qualitativeScale[2]},
+    {key: "Outros" , color: qualitativeScale[3]}
+];
+let esgotoLegend = [
+    {key: "Inexistente", color: qualitativeScale[0]},
+    {key: "Rede pública" , color: qualitativeScale[1]},
+    {key: "Fossa" , color: qualitativeScale[2]},
+    {key: "Outros" , color: qualitativeScale[3]}
+];
+let notaLegend = [
+    {key: "Muito Ruim", color: rankScale[0]},
+    {key: "Ruim" , color: rankScale[1]},
+    {key: "Bom" , color: rankScale[2]},
+    {key: "Muito Bom" , color: rankScale[3]}
+]
+let legendMap = {
+    "agua" : aguaLegend,
+    "nota" : notaLegend,
+    "energia" : energiaLegend,
+    "esgoto" : esgotoLegend
+};
 
 export function renderMap(store) {
   function innerRender() {
-    const schools = schoolsSelector(store.getState());
+    const state = store.getState();
 
-    renderMarkers(schools);
+    const schools = schoolsSelector(state);
+    const colouringCriteria = state.colorFilter;
+
+    renderMarkers(store, schools, colouringCriteria);
   }
 
   setupMap();
@@ -21,6 +59,8 @@ export function renderMap(store) {
 function setupMap(){
   const mapContainer = d3.select("#map");
   const {width, height} = mapContainer.node().getBoundingClientRect();
+
+  mapContainer.style("border", "1px solid black");
 
   const mapGroup = mapContainer
     .selectAll('#map-content')
@@ -42,9 +82,33 @@ function setupMap(){
     'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.streets'
   }).addTo(map);
+
 }
 
-function renderMarkers(schools) {
+function renderLabel(colouringCriteria) {
+    d3.select("div.info").filter(".legend").remove();
+
+    var legend = leaflet.control({position: 'bottomright'});
+    console.log(colouringCriteria);
+    legend.onAdd = function (map) {
+
+        var div = leaflet.DomUtil.create('div', 'info legend');
+        var legend = legendMap[colouringCriteria];
+
+        for (var i = 0; i < legend.length; i++) {
+          var item = legend[i];
+          var label = item.key;
+          var color = item.color;
+          div.innerHTML += '<div> <i style="background:' + color + '"></i> <span>' + label +'</span> </div>';
+        }
+
+        return div;
+    };
+
+    legend.addTo(map);
+}
+
+function renderMarkers(store, schools, colouringCriteria) {
   clearMapMarkers(schools);
 
   schools.keySeq().forEach((schoolId) => {
@@ -57,53 +121,127 @@ function renderMarkers(schools) {
     if (!markers[schoolId]) {
       var marker = leaflet
         .circleMarker([lat, lng], {
-          color: '#black',
-          weight: 3,
-          fillColor: '#f03',
-          fillOpacity: 0.5,
-          radius: 10
+          color: 'white',
+          weight: 0.5,
+          fillColor: getColor(colouringCriteria, school),
+          fillOpacity: 0.6,
+          radius: 5,
+          dataID: schoolId
         })
-        .addTo(map)
-        .bindPopup(moreDetails(school));
+        .addTo(map);
 
       markers[schoolId] = marker;
 
-      marker.on("mouseover", function() {
-        this.openPopup();
-      });
-
-      marker.on("mouseout", function() {
-        this.closePopup();
+      marker.on("click", function(d, a) {
+        store.dispatch(schoolSelectionActions.deselectSchool());
+        store.dispatch(schoolSelectionActions.selectSchool(schools.get(d.target.options.dataID)));
       });
     } else {
-      map.addLayer(markers[schoolId]);
+      markers[schoolId]
+        .setStyle({
+          fillColor: getColor(colouringCriteria, school),
+        })
+        .bringToFront();
     }
   });
+
+  renderLabel(colouringCriteria);
 }
 
 function clearMapMarkers(){
   Object.keys(markers).forEach((markerId) => {
-    map.removeLayer(markers[markerId]);
+    markers[markerId]
+      .setStyle({
+        fillColor: '#bdbdbd',
+      })
+      .bringToBack();
   });
 }
 
-function moreDetails(school){
-  const rank = school.get('rank');
-  const nome = school.get('nome');
-  const endereco = school.getIn([ 'endereco', 'address' ]);
-  const email = school.get('email');
+function getColor(type, school) {
+    if (type === "default" || type == null)
+        return "#f03";
+    else {
+        if (type === "agua")
+            return extractWater(school);
+        else if (type === "energia")
+            return extractEnergy(school);
+        else if (type === "esgoto")
+            return extractSewer(school);
+        else if (type === "tipo")
+            return extractType(school);
+        else if (type === "nota")
+            return extractRank(school);
+    }
+}
 
-  const layout =
-`<div>
-  <div>
-    <h5>${rank || 'Sem nota'}</h5>
-  </div>
-  <div>
-    <h5>${nome}</h5>
-    <p>${endereco}</p>
-    <p>${email}</p>
-  </div>
-</div>`;
+function extractRank(school) {
+  if (!school.get("rank")) {
+    return "#BBB";
+  }
 
-  return layout;
+  const rank = parseFloat(school.get("rank"));
+
+  if (rank < 2.5) {
+    return rankScale[0];
+  } else if (rank >= 2.5 && rank < 5.0) {
+    return rankScale[1];
+  } else if (rank >= 5.0 && rank < 7.5) {
+    return rankScale[2];
+  } else {
+    return rankScale[3];
+  }
+}
+
+function extractType(school) {
+    const value = school.get("tipo");
+    const typeScale = {
+        "creche" : qualitativeScale[0],
+        "ef" : qualitativeScale[1],
+        "em" : qualitativeScale[2],
+        "ef&em" : qualitativeScale[3]
+    };
+    return typeScale[value];
+}
+
+function extractEnergy(school) {
+    const value = school.get('_energia');
+
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('gerador'))
+        return qualitativeScale[2];
+    else
+        return qualitativeScale[3];
+}
+
+function extractWater(school) {
+    const value = school.get('_agua');
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('poco_artesiano'))
+        return qualitativeScale[2];
+    else if (value.get('cacimba'))
+        return qualitativeScale[3];
+    else if (value.get('fonte'))
+        return qualitativeScale[4];
+    else
+        return qualitativeScale[5];
+}
+
+function extractSewer(school) {
+    const value = school.get('_esgoto');
+
+    if (value.get('inexistente'))
+        return qualitativeScale[0];
+    else if (value.get('rede_publica'))
+        return qualitativeScale[1];
+    else if (value.get('fossa'))
+        return qualitativeScale[2];
+    else
+        return qualitativeScale[3];
 }

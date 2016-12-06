@@ -1,11 +1,12 @@
-var path = require('path');
 var fs = require('fs');
 
-module.exports = function aggregateAndFilterStudentData (rawStudentsData, schoolsData) {
-  return rawStudentsData.reduce((aggregate, studentData) => {
-    const schoolId = schoolIdForStudent(studentData, schoolsData);
+module.exports = function aggregateAndFilterStudentData (rawStudentsData, schoolsData, keysInfoFilePath) {
+  const keysInfo = JSON.parse(fs.readFileSync(keysInfoFilePath));
 
-    const filteredData = getOnlyDesiredKeys(studentData);
+  return rawStudentsData.reduce((aggregate, studentData) => {
+    const schoolId = schoolIdForStudent(studentData, schoolsData, keysInfo.escola);
+
+    const filteredData = getOnlyDesiredKeys(studentData, keysInfo.mappings);
 
     if (schoolId) {
       aggregate[studentData['_id']] = Object.assign({ escola: schoolId }, filteredData);
@@ -15,23 +16,20 @@ module.exports = function aggregateAndFilterStudentData (rawStudentsData, school
   }, {});
 };
 
-function schoolIdForStudent(studentData, schoolsData) {
+function schoolIdForStudent(studentData, schoolsData, schoolNameField) {
   const result = Object.keys(schoolsData).filter((key) => {
-    return schoolsData[key].nome.includes(studentData.NESCOLNOME);
+    return schoolsData[key].nome.includes(studentData[schoolNameField]);
   });
 
   if (result.length !== 1) {
-    console.error(`search for school name ${studentData.NESCOLNOME} returned ${result.length} results: ${result}`);
+    console.error(`search for school name ${studentData[schoolNameField]} returned ${result.length} results: ${result}`);
   }
 
   return result[0];
 }
 
 const getOnlyDesiredKeys = (() => {
-  var desiredKeysFile = path.join(__dirname, '../dataFiles/studentFields.json');
-  var desiredKeyMappings = JSON.parse(fs.readFileSync(desiredKeysFile)).mappings;
-
-  return (rawStudentData) => {
+  return (rawStudentData, desiredKeyMappings) => {
     var result = {};
 
     Object.keys(desiredKeyMappings).forEach((key) => {

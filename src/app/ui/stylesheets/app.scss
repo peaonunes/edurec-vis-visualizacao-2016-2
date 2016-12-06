@@ -1,6 +1,7 @@
 @import "filterBar";
 @import "map";
 @import "overview";
+@import "parallel";
 
 html, body {
   height: 100%;
@@ -12,6 +13,7 @@ h1 {
 
 body {
   margin: 0;
+  background-color: #fafafa;
 }
 
 .row {
@@ -40,11 +42,67 @@ body {
   left: 0;
 }
 
+#content, .left-column, .right-column {
+  min-height: 100%;
+}
+
 #content {
-  height: 100%;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+$leftColumnViewportRatio: 60%;
+
+.left-column {
+  flex: 0 0 $leftColumnViewportRatio;
+  width: $leftColumnViewportRatio;
+}
+
+.right-column {
+  flex: 0 0 (100% - $leftColumnViewportRatio);
+  width: 100% - $leftColumnViewportRatio;
 }
 
 .app-section {
-  height: 90%;
+  height: 90vh;
 }
 
+.toolbar {
+  background-color: $filterBarBackground;
+  color: white;
+  font-family: sans-serif;
+  padding: 1rem;
+}
+
+.faqs {
+  text-align: center;
+  line-height: 20px;
+  background-color: #63696D;
+  font-family: sans-serif;
+  color: white;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-left: 200px;
+  padding-right: 200px;
+}
+
+.footer {
+  text-align: center;
+  line-height: 20px;
+  background-color: #fafafa;
+  font-family: sans-serif;
+  color: #333333;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-left: 200px;
+  padding-right: 200px;
+}
+
+.footer-left {
+  text-align: left !important;
+}
+
+#footer-wrapper {
+  flex: 0 0 100%;
+  width:100%;
+}

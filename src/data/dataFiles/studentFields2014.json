@@ -1,0 +1,11 @@
+{
+  "escola": "escola",
+  "mappings": {
+    "ano_ensino": "ano",
+    "turno": "turno",
+    "modalidade_ensino": "grau",
+    "turma": "turma",
+    "situacao_codigo": "situacao",
+    "situacao_nome": "descricao_situacao"
+  }
+}
