@@ -8,13 +8,51 @@ const setupParsetFunction = require('./d3.parsets');
 setupParsetFunction(d3v3);
 
 let headers = ["Internet", "Energia", "Esgoto", "Agua", "Lixo", "Funcionarios"];
+let internetToValue = {
+    "Com internet" : 1,
+    "Sem internet" : 0
+};
+let energyToValue = {
+    "Inexistente" : "inexistente",
+    "Rede pública" : "rede_publica",
+    "Gerador" : "gerador",
+    "Outros" : "outros"
+};
+let sewerToValue = {
+    "Inexistente" : "inexistente",
+    "Rede pública" : "rede_publica",
+    "Fossa" : "fossa",
+    "Outros" : "outros"
+};
+let waterToValue = {
+    "Inexistente" : "inexistente",
+    "Rede pública" : "rede_publica",
+    "Poço artesiano" : "poco_artesiano",
+    "Cacimba" : "cacimba",
+    "Fonte" : "fonte",
+    "Outros" : "outros"
+};
+let trashToValue = {
+    "Coleta periódica" : "coleta_periodica",
+    "Recicla" : "recicla",
+    "Queima" : "queima",
+    "Enterra" : "enterra",
+    "Outros" : "outros"
+};
+let employessToValue = {
+    "Até 25" : 25,
+    "Até 50" : 50,
+    "Até 75" : 75,
+    "Até 100" : 100,
+    "Mais que 100" : Number.POSITIVE_INFINITY
+};
 let headersToField = {
-    "Internet": "acesso_internet",
-    "Energia" : "_energia",
-    "Esgoto": "_esgoto",
-    "Agua": "_agua",
-    "Lixo": "_lixo",
-    "Funcionarios": "total_funcionarios",
+    "Internet": ["acesso_internet",internetToValue],
+    "Energia" : ["_energia",energyToValue],
+    "Esgoto": ["_esgoto",sewerToValue],
+    "Agua": ["_agua",waterToValue],
+    "Lixo": ["_lixo",trashToValue],
+    "Funcionarios": ["total_funcionarios",employessToValue]
 };
 let chart = d3v3.parsets();
 let storeApp;
@@ -122,7 +160,29 @@ function getSelectedDimensions(path, dimensions) {
 
 function dispatchFiltersToViews(selectedDimensions) {
     // TODO: Create the filter and update the state.
-    console.log(selectedDimensions);
+    //console.log(selectedDimensions);
+    selectedDimensions = selectedDimensions.map(function(element){
+        var map = headersToField[element.dimension];
+        var dimension = map[0];
+
+        if(dimension == "acesso_internet")
+            return createFilter(dimension);
+
+        var value = map[1][element.value];
+
+        if(dimension == "total_funcionarios"){
+            if(value == Number.POSITIVE_INFINITY){
+                return createFilter(dimension, Number.POSITIVE_INFINITY, 100);
+            } else {
+                return createFilter(dimension, value, value-25);
+            }
+        }
+
+        var fieldPath = dimension+"."+value;
+
+        return createFilter(dimension, )
+    });
+
     // converter dimension e value para _dimension.value, acesso internet, Funcionarios pra total_funcionarios
     // de acordo com o valor de total_funcionarios extrair o range rangeFilterFactory(
     // createFilter para todo mundo com o fieldpath e arguentos necessarios (caso do total_funcionarios)
