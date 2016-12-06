@@ -5,8 +5,40 @@ import { actionCreators as schoolSelectionActions } from '../state/actions/schoo
 
 let map;
 let markers = {};
-let qualitativeScale = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc"];
-let rankScale = ["#c7e9c0","#a1d99b","#74c476",'#31a354',"#006d2c"];
+let qualitativeScale = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33"];
+let rankScale = ["#d7191c","#fdae61",'#a6d96a',"#1a9641"];
+let aguaLegend = [
+    {key: "Inexistente", color: qualitativeScale[0]},
+    {key: "Rede pública" , color: qualitativeScale[1]},
+    {key: "Poço artesiano" , color: qualitativeScale[2]},
+    {key: "Cacimba" , color: qualitativeScale[3]},
+    {key: "Fonte" , color: qualitativeScale[4]},
+    {key: "Outros" , color: qualitativeScale[5]}
+    ];
+let energiaLegend = [
+    {key: "Inexistente", color: qualitativeScale[0]},
+    {key: "Rede pública" , color: qualitativeScale[1]},
+    {key: "Gerador" , color: qualitativeScale[2]},
+    {key: "Outros" , color: qualitativeScale[3]}
+];
+let esgotoLegend = [
+    {key: "Inexistente", color: qualitativeScale[0]},
+    {key: "Rede pública" , color: qualitativeScale[1]},
+    {key: "Fossa" , color: qualitativeScale[2]},
+    {key: "Outros" , color: qualitativeScale[3]}
+];
+let notaLegend = [
+    {key: "Muito Ruim", color: rankScale[0]},
+    {key: "Ruim" , color: rankScale[1]},
+    {key: "Bom" , color: rankScale[2]},
+    {key: "Muito Bom" , color: rankScale[3]}
+]
+let legendMap = {
+    "agua" : aguaLegend,
+    "nota" : notaLegend,
+    "energia" : energiaLegend,
+    "esgoto" : esgotoLegend
+};
 
 export function renderMap(store) {
   function innerRender() {
@@ -50,6 +82,30 @@ function setupMap(){
     'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.streets'
   }).addTo(map);
+
+}
+
+function renderLabel(colouringCriteria) {
+    d3.select("div.info").filter(".legend").remove();
+
+    var legend = leaflet.control({position: 'bottomright'});
+    console.log(colouringCriteria);
+    legend.onAdd = function (map) {
+
+        var div = leaflet.DomUtil.create('div', 'info legend');
+        var legend = legendMap[colouringCriteria];
+
+        for (var i = 0; i < legend.length; i++) {
+          var item = legend[i];
+          var label = item.key;
+          var color = item.color;
+          div.innerHTML += '<div> <i style="background:' + color + '"></i> <span>' + label +'</span> </div>';
+        }
+
+        return div;
+    };
+
+    legend.addTo(map);
 }
 
 function renderMarkers(store, schools, colouringCriteria) {
@@ -68,8 +124,8 @@ function renderMarkers(store, schools, colouringCriteria) {
           color: 'white',
           weight: 0.5,
           fillColor: getColor(colouringCriteria, school),
-          fillOpacity: 0.75,
-          radius: 7.5,
+          fillOpacity: 0.6,
+          radius: 5,
           dataID: schoolId
         })
         .addTo(map);
@@ -88,6 +144,8 @@ function renderMarkers(store, schools, colouringCriteria) {
         .bringToFront();
     }
   });
+
+  renderLabel(colouringCriteria);
 }
 
 function clearMapMarkers(){
@@ -118,16 +176,21 @@ function getColor(type, school) {
 }
 
 function extractRank(school) {
-    const rank = school.get("rank");
+  if (!school.get("rank")) {
+    return "#BBB";
+  }
 
-    if (rank < 25)
-        return rankScale[0];
-    else if (rank >= 25 && rank < 50)
-        return rankScale[1];
-    else if (rank >= 50 && rank < 75)
-        return rankScale[2];
-    else
-        return rankScale[3];
+  const rank = parseFloat(school.get("rank"));
+
+  if (rank < 2.5) {
+    return rankScale[0];
+  } else if (rank >= 2.5 && rank < 5.0) {
+    return rankScale[1];
+  } else if (rank >= 5.0 && rank < 7.5) {
+    return rankScale[2];
+  } else {
+    return rankScale[3];
+  }
 }
 
 function extractType(school) {

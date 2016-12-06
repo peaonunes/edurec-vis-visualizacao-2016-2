@@ -25,6 +25,8 @@ export default function schoolsReducer(schools = Map(), action) {
       school._energia = school.energia;
       school.energia = undefined;
 
+      school.acesso_internet = (school.acesso_internet === "1");
+
       return schools.set(school['_id'], Immutable.fromJS(school));
     case actionTypes.ADD_STUDENT:
       const { schoolId, student } = action.payload;
