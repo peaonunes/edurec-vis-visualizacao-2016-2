@@ -124,8 +124,8 @@ function renderMarkers(store, schools, colouringCriteria) {
           color: 'white',
           weight: 0.5,
           fillColor: getColor(colouringCriteria, school),
-          fillOpacity: 0.75,
-          radius: 7.5,
+          fillOpacity: 0.6,
+          radius: 5,
           dataID: schoolId
         })
         .addTo(map);
