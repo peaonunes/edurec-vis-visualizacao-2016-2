@@ -11,75 +11,40 @@
 <body>
   <div id="filterBar" class="row stretch toolbar fixed">
     <h1>EDUREC</h1>
-    <div class="row stretch">
-      <ul class="row stretch dropdown-list">
-        <li class="dropdown" data-dropdown="dropdownDependencias">
-          <span class="dropdown-label">Dependências</span>
-          <div class="dropdown-content" id="dropdownDependencias">
-            <input type="checkbox" value="dependencias.biblioteca" class="filter-checkbox school-filter">Biblioteca</input>
-            <br/>
-            <input type="checkbox" value="dependencias.cozinha" class="filter-checkbox school-filter">Cozinha</input>
-            <br/>
-            <input type="checkbox" value="dependencias.refeitorio" class="filter-checkbox school-filter">Refeitório</input>
-            <br/>
-            <input type="checkbox" value="dependencias.laboratorio_informatica" class="filter-checkbox school-filter">Laboratório de informática</input>
-            <br/>
-            <input type="checkbox" value="dependencias.laboratorio_ciencias" class="filter-checkbox school-filter">Laboratório de ciências</input>
-            <br/>
-            <input type="checkbox" value="dependencias.parque_infantil" class="filter-checkbox school-filter">Parque infantil</input>
-          </div>
-        </li>
-        <li class="dropdown" data-dropdown="dropdownServicos">
-          <span class="dropdown-label">Serviços básicos</span>
-          <div class="dropdown-content" id="dropdownServicos">
-            <input type="radio" value="nota" class="filter-checkbox color-filter" name="color-filter" checked>Nota</input>
-            <br/>
-            <input type="radio" value="agua" class="filter-checkbox color-filter" name="color-filter">Água</input>
-            <br/>
-            <input type="radio" value="energia" class="filter-checkbox color-filter" name="color-filter">Energia</input>
-            <br/>
-            <input type="radio" value="esgoto" class="filter-checkbox color-filter" name="color-filter">Esgoto</input>
-          </div>
-        </li>
-      </ul>
-
-      <ul class="row stretch dropdown-list">
-        <li class="dropdown" data-dropdown="dropdownGrau">
-          <span class="dropdown-label">Ciclos de ensino</span>
-          <div class="dropdown-content" id="dropdownGrau">
-            <input type="checkbox" value="EDUCACAO INFANTIL" class="filter-checkbox student-filter" data-field="grau" checked>Infantil</input>
-            <br/>
-            <input type="checkbox" value="ENSINO FUNDAMENTAL" class="filter-checkbox student-filter" data-field="grau" checked>Fundamental</input>
-            <br/>
-            <input type="checkbox" value="ENSINO FUNDAMENTAL ESPECIAL" class="filter-checkbox student-filter" data-field="grau" checked>Fundamental especial</input>
-            <br/>
-            <input type="checkbox" value="ENSINO MEDIO" class="filter-checkbox student-filter" data-field="grau" checked>Médio</input>
-            <br/>
-            <input type="checkbox" value="CORREO DE FLUXO" class="filter-checkbox student-filter" data-field="grau" checked>Correção de fluxo</input>
-            <br/>
-            <input type="checkbox" value="EDUCACAO  JOVENS E ADULTOS" class="filter-checkbox student-filter" data-field="grau" checked>Programa Educação jovens e adultos</input>
-            <br/>
-            <input type="checkbox" value="EJA ESPECIAL" class="filter-checkbox student-filter" data-field="grau" checked>Programa Educação jovens e adultos especial</input>
-
-          </div>
-        </li>
-        <li class="dropdown" data-dropdown="dropdownTurno">
-          <span class="dropdown-label">Turno</span>
-          <div class="dropdown-content" id="dropdownTurno">
-            <input type="checkbox" value="MANH" class="filter-checkbox student-filter" data-field="turno" checked>Manhã</input>
-            <br/>
-            <input type="checkbox" value="TARDE" class="filter-checkbox student-filter" data-field="turno" checked>Tarde</input>
-            <br/>
-            <input type="checkbox" value="NOITE" class="filter-checkbox student-filter" data-field="turno" checked>Noite</input>
-          </div>
-        </li>
-      </ul>
+    <div id="divFaqs" class="row strech">
+      <a id="faqs" href="#">FAQs</a>
     </div>
   </div>
 
   <div id="topbar-padding"></div>
   <div id="content">
     <div class="left-column">
+      <div class="row strech lightcolor">
+        <ul class="row stretch dropdown-list">
+          <li class="dropdown" data-dropdown="dropdownDependencias">
+            <span class="dropdown-label">Dependências</span>
+            <div class="dropdown-content" id="dropdownDependencias">
+              <input type="checkbox" value="dependencias.biblioteca" class="filter-checkbox school-filter">Biblioteca</input>
+              <br/>
+              <input type="checkbox" value="dependencias.cozinha" class="filter-checkbox school-filter">Cozinha</input>
+              <br/>
+              <input type="checkbox" value="dependencias.refeitorio" class="filter-checkbox school-filter">Refeitório</input>
+            </div>
+          </li>
+          <li class="dropdown" data-dropdown="dropdownServicos">
+            <span class="dropdown-label">Serviços básicos</span>
+            <div class="dropdown-content" id="dropdownServicos">
+              <input type="radio" value="nota" class="filter-checkbox color-filter" name="color-filter" checked>Nota</input>
+              <br/>
+              <input type="radio" value="agua" class="filter-checkbox color-filter" name="color-filter">Água</input>
+              <br/>
+              <input type="radio" value="energia" class="filter-checkbox color-filter" name="color-filter">Energia</input>
+              <br/>
+              <input type="radio" value="esgoto" class="filter-checkbox color-filter" name="color-filter">Esgoto</input>
+            </div>
+          </li>
+        </ul>
+      </div>
       <div class="app-section" id="map"></div>
       <div class="app-section" id="parallelSets">
         <div class="row toolbar" id="options"></div>
@@ -87,6 +52,39 @@
       </div>
     </div>
     <div class="right-column">
+      <div class="row strech lightcolor">
+        <ul class="row stretch dropdown-list">
+          <li class="dropdown" data-dropdown="dropdownGrau">
+            <span class="dropdown-label">Ciclos de ensino</span>
+            <div class="dropdown-content" id="dropdownGrau">
+              <input type="checkbox" value="EDUCACAO INFANTIL" class="filter-checkbox student-filter" data-field="grau" checked>Infantil</input>
+              <br/>
+              <input type="checkbox" value="ENSINO FUNDAMENTAL" class="filter-checkbox student-filter" data-field="grau" checked>Fundamental</input>
+              <br/>
+              <input type="checkbox" value="ENSINO FUNDAMENTAL ESPECIAL" class="filter-checkbox student-filter" data-field="grau" checked>Fundamental especial</input>
+              <br/>
+              <input type="checkbox" value="ENSINO MEDIO" class="filter-checkbox student-filter" data-field="grau" checked>Médio</input>
+              <br/>
+              <input type="checkbox" value="CORREO DE FLUXO" class="filter-checkbox student-filter" data-field="grau" checked>Correção de fluxo</input>
+              <br/>
+              <input type="checkbox" value="EDUCACAO  JOVENS E ADULTOS" class="filter-checkbox student-filter" data-field="grau" checked>Programa Educação jovens e adultos</input>
+              <br/>
+              <input type="checkbox" value="EJA ESPECIAL" class="filter-checkbox student-filter" data-field="grau" checked>Programa Educação jovens e adultos especial</input>
+
+            </div>
+          </li>
+          <li class="dropdown" data-dropdown="dropdownTurno">
+            <span class="dropdown-label">Turno</span>
+            <div class="dropdown-content" id="dropdownTurno">
+              <input type="checkbox" value="MANH" class="filter-checkbox student-filter" data-field="turno" checked>Manhã</input>
+              <br/>
+              <input type="checkbox" value="TARDE" class="filter-checkbox student-filter" data-field="turno" checked>Tarde</input>
+              <br/>
+              <input type="checkbox" value="NOITE" class="filter-checkbox student-filter" data-field="turno" checked>Noite</input>
+            </div>
+          </li>
+        </ul>
+      </div>
       <div id="mapDetails"></div>
     </div>
   </div>
