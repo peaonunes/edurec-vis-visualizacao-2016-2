@@ -67,7 +67,7 @@ function moreDetails(school, newRank){
   const comp_alunos = school.get('equipamentos_comp_alunos');
   const acesso_internet = (school.get('acesso_internet') == true ? 'Possui' : 'Não possui');
   const total_funcionarios = school.get('total_funcionarios');
-  
+
   if(rank)
     rank = newRank.toFixed(2);
 
@@ -182,7 +182,7 @@ function renderPieChart(students) {
   svg.append("text")
   .attr("x", 0)
   .attr("y", 0)
-  .attr("transform", "translate(" + titleMargin + "80, 30)")
+  .attr("transform", "translate(" + titleMargin + ", 30)")
   .style("font-size", "1em")
   .style("fill", "#212121")
   .text("Situação Anual dos Alunos - 2014");
