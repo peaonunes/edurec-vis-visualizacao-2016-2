@@ -70,3 +70,39 @@ $leftColumnViewportRatio: 60%;
   font-family: sans-serif;
   padding: 1rem;
 }
+
+.faqs {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20px;
+    background-color: #63696D;
+    font-family: sans-serif;
+    color: white;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+.footer {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20px;
+    background-color: #fafafa;
+    font-family: sans-serif;
+    color: #333333;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+.footer-left {
+    text-align: left !important;
+}
+
+#footer-wrapper {
+    position:absolute;
+    bottom:0;
+    width:100%;
+}
