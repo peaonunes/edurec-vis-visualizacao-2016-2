@@ -118,16 +118,21 @@ function getColor(type, school) {
 }
 
 function extractRank(school) {
-    const rank = school.get("rank");
+  if (!school.get("rank")) {
+    return "#BBB";
+  }
 
-    if (rank < 25)
-        return rankScale[0];
-    else if (rank >= 25 && rank < 50)
-        return rankScale[1];
-    else if (rank >= 50 && rank < 75)
-        return rankScale[2];
-    else
-        return rankScale[3];
+  const rank = parseFloat(school.get("rank"));
+
+  if (rank < 2.5) {
+    return rankScale[0];
+  } else if (rank >= 2.5 && rank < 5.0) {
+    return rankScale[1];
+  } else if (rank >= 5.0 && rank < 7.5) {
+    return rankScale[2];
+  } else {
+    return rankScale[3];
+  }
 }
 
 function extractType(school) {
