@@ -48,7 +48,7 @@ function renderSchoolDetails(school, students) {
   if(students.size != 0)
     newRank = calculateGrade(students);
 
-  schoolDetails.append("div").html(moreDetails(school, newRank));
+  schoolDetails.append("div").html(moreDetails(school, newRank, students.size));
 
   if(students.size != 0)
     renderStudentsDetails(students);
@@ -58,7 +58,7 @@ function renderSchoolDetails(school, students) {
   schoolDetails.style("border", "1px solid black");
 }
 
-function moreDetails(school, newRank){
+function moreDetails(school, newRank, students){
   var rank = school.get('rank');
   const nome = school.get('nome');
   const endereco = school.getIn([ 'endereco', 'address' ]);
@@ -93,6 +93,7 @@ function moreDetails(school, newRank){
     <p>Quantida de computadores para alunos: ${comp_alunos | '0'}</p>
     <p>${acesso_internet} acesso a internet</p>
     <p>Quantidade de funcionários: ${total_funcionarios | '0'}</p>
+    <p>Quantidade de alunos: ${students}</p>
   </div>
 </div>`;
 
