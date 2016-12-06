@@ -1,5 +1,12 @@
-$mapToScreenRatio: 60%;
+#parallelSets {
+  display: flex;
+  flex-flow: column nowrap;
 
-.parallel-width {
-    flex: 0 0 $mapToScreenRatio;
+  #options {
+    flex: 0 0 auto;
+  }
+
+  #parallel {
+    flex: 1 0 auto;
+  }
 }

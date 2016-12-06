@@ -6,6 +6,7 @@ import { renderMap } from './ui/map.js';
 import { setupDropdownElements, setupFilterCheckboxes, adjustContentSectionPadding } from './ui/filterBar';
 import { showSchoolDetails } from './ui/schoolDetails';
 import { renderParallelSetsChart } from './ui/parallelSets';
+import { renderFAQS } from './ui/about';
 
 const d3 = require('d3');
 
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMap(store);
     showSchoolDetails(store);
     renderParallelSetsChart(store);
+    renderFAQS();
   });
 });
 

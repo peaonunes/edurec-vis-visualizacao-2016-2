@@ -107,14 +107,15 @@ function selectFeature(fieldName) {
 function renderParallelSet(selector, schools){
   const chartContainer = d3v3.select(selector);
 
-  const width = chartContainer.node().getBoundingClientRect().width;
+    const { width, height } = chartContainer.node().getBoundingClientRect();
+    chart.height(height);
 
   chartContainer.select("svg").remove();
 
-  var svg = chartContainer.append("svg")
-    .attr("style", "background-color: #f5f5f5")
-    .attr("width", width)
-    .attr("height", chart.height());
+    var svg = chartContainer.append("svg")
+      .attr("style", "background-color: #f5f5f5")
+      .attr("width", width)
+      .attr("height", height);
 
   var filteredCategories = getFilteredCategories();
 
