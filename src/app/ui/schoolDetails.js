@@ -1,17 +1,41 @@
 const d3 = require('d3');
+import { schoolStudents as schoolStudentsSelector } from '../state/selectors';
 
 export function showSchoolDetails(store) {
   function render() {
     const selectedSchool = store.getState().selectedSchool;
-    if(selectedSchool)
-      renderSchoolDetails(selectedSchool);
+    const state = store.getState();
+
+    if(selectedSchool) {
+      const schoolStudentsMap = schoolStudentsSelector(state);
+
+      const id = selectedSchool.get("_id");
+      const students = schoolStudentsMap.get(id);
+
+      renderSchoolDetails(selectedSchool, students);
+    }
   }
 
   render();
   store.subscribe(render);
 }
 
-function renderSchoolDetails(school) {
+function calculateGrade(students) {
+  var approved = 0;
+  var total = 0;
+
+  var size = students.size;
+
+  for(var i = 0; i < size; i++) {
+    var student = students.get(i);
+    total++;
+    if(student.get('situacao') === 'AP')
+      approved++;
+  }
+  return (approved / total) * 10;
+}
+
+function renderSchoolDetails(school, students) {
   var schoolDetails = d3.select("#mapDetails");
 
   schoolDetails.style("background-color", "#f5f5f5");
@@ -19,10 +43,14 @@ function renderSchoolDetails(school) {
 
   schoolDetails.selectAll("*").remove();
 
-  schoolDetails.append("div").html(moreDetails(school));
+  var newRank = -1;
 
-  var students = school.get('students');
-  if(students)
+  if(students.size != 0)
+    newRank = calculateGrade(students);
+
+  schoolDetails.append("div").html(moreDetails(school, newRank));
+
+  if(students.size != 0)
     renderStudentsDetails(students);
 
   renderIdeb(school);
@@ -30,8 +58,8 @@ function renderSchoolDetails(school) {
   schoolDetails.style("border", "1px solid black");
 }
 
-function moreDetails(school){
-  const rank = school.get('rank');
+function moreDetails(school, newRank){
+  var rank = school.get('rank');
   const nome = school.get('nome');
   const endereco = school.getIn([ 'endereco', 'address' ]);
   const email = school.get('email');
@@ -40,6 +68,9 @@ function moreDetails(school){
   const acesso_internet = (school.get('acesso_internet') == true ? 'Possui' : 'Não possui');
   const total_funcionarios = school.get('total_funcionarios');
 
+  if(rank)
+    rank = newRank.toFixed(2);
+
   const layout =
 `<div>
   <div>
@@ -47,8 +78,8 @@ function moreDetails(school){
       <tr style="width: 100%">
         <td style="text-align: left; width : 80%"><strong>${nome}</strong></td>
         <td style="text-align: center; width : 20%">
-          <div style="background-color: #fafafa; border: 5px solid #e0e0e0" title="Razão entre a quantidade de alunos aprovados e a quantidade total de alunos da escola">
-            <h1 style="color: #616161; padding: 5px">${rank || 'Sem nota'}</h1>
+          <div style="background-color: #fafafa; border: 2px solid #e0e0e0" title="Razão entre a quantidade de alunos aprovados e a quantidade total de alunos da escola">
+            <h1 style="color: #616161; padding: 5px;">${rank || '-'}</h1>
           </div>
         </td>
       </tr>
@@ -71,7 +102,10 @@ function moreDetails(school){
 function renderPieChart(students) {
   var schoolDetails = d3.select("#mapDetails");
 
-  var width = 400;
+  var divWidth = schoolDetails.node().getBoundingClientRect().width;
+  var divHeight = schoolDetails.node().getBoundingClientRect().height;
+
+  var width = 0.75*divWidth;
   var height = 250;
 
   var svg = schoolDetails.append("svg")
@@ -127,7 +161,16 @@ function renderPieChart(students) {
   //piechat
   var colorScale = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494"];
 
-  var outer = 90;
+  var outer;
+  if(divWidth > 200)
+    outer = 90;
+  else
+    outer = 0.2*divWidth;
+
+  var outerXTranslante = outer + 10;
+  var outerLabelXTranslate = outer * 2 + 20;
+
+  var titleMargin = 0.1*width;
 
   var arc = d3.arc().innerRadius(0).outerRadius(outer);
 
@@ -139,7 +182,7 @@ function renderPieChart(students) {
   svg.append("text")
   .attr("x", 0)
   .attr("y", 0)
-  .attr("transform", "translate(80, 30)")
+  .attr("transform", "translate(" + titleMargin + ", 30)")
   .style("font-size", "1em")
   .style("fill", "#212121")
   .text("Situação Anual dos Alunos - 2014");
@@ -151,7 +194,7 @@ function renderPieChart(students) {
   .attr("fill", function(d,i) {
     return colorScale[i];
   })
-  .attr("transform", "translate(" + 110 + "," + (outer + 20) + ")");
+  .attr("transform", "translate(" + outerXTranslante + "," + (outer + 20) + ")");
 
   //append labels
   for(var i = 0; i < keys.length; i++) {
@@ -161,13 +204,13 @@ function renderPieChart(students) {
     .attr("y", 0)
     .attr("width", 10)
     .attr("height", 10)
-    .attr("transform", "translate(" + 215 + ", " + (((i+1)*20)) + ")")
+    .attr("transform", "translate(" + outerLabelXTranslate + ", " + (((i+1)*20)) + ")")
     .attr("fill", colorScale[i]);
 
     schoolDetails.select("svg").append("text")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("transform", "translate(" + 230 + ", " + (height - (i+1)*20) + ")")
+    .attr("transform", "translate(" + (outerLabelXTranslate + 15) + ", " + (height - (i+1)*20) + ")")
     .text(function(d) {
       if(situations.hasOwnProperty(keys[i]))
         return situations[keys[i]] + " - " + studentTypeQt[keys[i]];
@@ -185,7 +228,10 @@ function renderIdeb(school) {
 
   var schoolDetails = d3.select("#mapDetails");
 
-  var width = 400;
+  var divWidth = schoolDetails.node().getBoundingClientRect().width;
+  var divHeight = schoolDetails.node().getBoundingClientRect().height;
+
+  var width = 0.75*divWidth;
   var height = 250;
 
   var svg = schoolDetails.append("svg")
@@ -200,7 +246,7 @@ function renderIdeb(school) {
   var g = svg.append("g")
     .attr("transform", "translate(0," + height + ") scale(1,-1)");
 
-    schoolDetails.append("br");
+  schoolDetails.append("br");
 
   g.append("rect")
   .attr("x", 0)
@@ -216,13 +262,16 @@ function renderIdeb(school) {
 
   var maxIdebValue = 10;
 
+  var lineSize = 0.5*width;
+
+  var titleMargin = 0.1*width;
+
   var yScale = d3.scaleLinear().range([0,150]).domain([0, maxIdebValue]);
 
-  var boxWidth = 30;
-
+  var boxWidth = 0.1*width;
   var originY = 30;
-  var originX = 100;
-  var margin = 50;
+  var originX = 0.25*width;
+  var margin = 0.125*width;
   var scaleLine = 10;
   var labelLine = 20;
 
@@ -230,7 +279,7 @@ function renderIdeb(school) {
   g.append("line")
   .attr("x1", originX)
   .attr("y1", originY)
-  .attr("x2", originX + 210)
+  .attr("x2", originX + lineSize)
   .attr("y2", originY)
   .attr("stroke", "black")
   .attr("stroke-width", "1px");
@@ -321,7 +370,7 @@ function renderIdeb(school) {
   svg.append("text")
   .attr("x", 0)
   .attr("y", 0)
-  .attr("transform", "translate(110, 30)")
+  .attr("transform", "translate(" + titleMargin + ", 30)")
   .style("font-size", "1em")
   .style("fill", "#212121")
   .text("Avaliação no IDEB - 2013");
