@@ -4,6 +4,7 @@ import { List } from 'immutable';
 const schools = (state) => state.schools;
 const schoolFilters = (state) => state.schoolFilters;
 const studentFilters = (state) => state.studentFilters;
+const parallelSelection = (state) => state.parallelSelect;
 
 const schoolStudentsSelector = createSelector(
   [ schools, studentFilters ],
@@ -24,15 +25,18 @@ const schoolStudentsSelector = createSelector(
 );
 
 const schoolsSelector = createSelector(
-  [ schoolStudentsSelector, schools, schoolFilters ],
-  (students, schools, schoolFilters) => {
+  [ schoolStudentsSelector, schools, schoolFilters, parallelSelection ],
+  (students, schools, schoolFilters, parallelSelection) => {
     return schools
       .filter((school, schoolId) => {
         return schoolFilters
           .reduce((aggregateValue, field) => {
             return aggregateValue &&
-              !!school.getIn(field.split('.')) &&
-              !students.get(schoolId).isEmpty()
+              !!school.getIn(field.split('.'))
+          }, true)
+          && !students.get(schoolId).isEmpty()
+          && parallelSelection.reduce((aggregateValue, filter) => {
+              return aggregateValue && filter(school);
           }, true);
       });
   }
